@@ -1,5 +1,6 @@
 package no.bouvet.p2pcommunication;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,20 +14,24 @@ import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import no.bouvet.p2pcommunication.broadcast_receivers.WiFiP2pBroadcastReceiver;
-import no.bouvet.p2pcommunication.fragments.DiscoveredDevicesListFragment;
-import no.bouvet.p2pcommunication.listeners.WifiP2pConnectActionListener;
-import no.bouvet.p2pcommunication.listeners.WifiP2pDisconnectActionListener;
-import no.bouvet.p2pcommunication.listeners.WifiP2pDiscoverActionListener;
-import no.bouvet.p2pcommunication.listeners.WifiP2pListener;
+import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
+import no.bouvet.p2pcommunication.broadcast_receiver.WiFiP2pBroadcastReceiver;
+import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
+import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
+import no.bouvet.p2pcommunication.listener.ViewPagerOnPageChangeListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pConnectActionListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pDisconnectActionListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pDiscoverActionListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pBroadcastReceiverListener;
 
-public class P2PCommunicationActivity extends ActionBarActivity implements WifiP2pListener {
+public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pBroadcastReceiverListener {
 
     public static final String TAG = "P2PCommunicationActivity";
     private IntentFilter wifiP2pIntentFilter;
@@ -35,19 +40,24 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
     private WiFiP2pBroadcastReceiver wiFiP2pBroadcastReceiver;
     private boolean wifiP2pEnabled;
 
+    private P2pCommunicationFragmentPagerAdapter p2pCommunicationFragmentPagerAdapter;
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        WifiManager wifiManager = (WifiManager)getSystemService(WIFI_SERVICE);
-        if(wifiManager != null){
-            WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock(TAG);
-            multicastLock.acquire();
-        }
+        createAndAcquireMulticastLock();
         wifiP2pIntentFilter = createWifiP2pIntentFilter();
         wifiP2pManager = getWifiP2pManager();
         wifiP2pChannel = createWifiP2pChannel();
+
+        p2pCommunicationFragmentPagerAdapter = new P2pCommunicationFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(p2pCommunicationFragmentPagerAdapter);
+
+        setViewPagerOnPageChangeListener();
     }
 
     @Override
@@ -55,7 +65,6 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
         super.onResume();
         createAndRegisterWifiP2pBroadcastReceiver();
     }
-
 
     @Override
     public void onPause() {
@@ -72,10 +81,10 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.enable_button:
+            case R.id.enable_p2p_button:
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 return true;
-            case R.id.discover_button:
+            case R.id.discover_peers_button:
                 if (wifiP2pEnabled) {
                     discoverDevices();
                 } else {
@@ -99,20 +108,19 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
 
     @Override
     public void onDisconnect() {
-        disconnectFromWifiP2pNetwork();
-        onClearDiscoveredDevices();
+        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(this));
     }
 
     @Override
     public void onConnect(WifiP2pDevice wifiP2pDevice) {
-        connectToWifiP2pDevice(wifiP2pDevice);
+        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(this));
     }
 
     @Override
     public void onRequestPeers() {
-        requestPeers();
+        PeerListListener peerListListener = getDiscoveryAndConnectionFragment();
+        wifiP2pManager.requestPeers(wifiP2pChannel, peerListListener);
     }
-
 
     @Override
     public void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice) {
@@ -121,13 +129,22 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
 
     @Override
     public void onRequestConnectionInfo() {
-        requestConnectionInfo();
+        ConnectionInfoListener connectionInfoListener = getCommunicationFragment();
+        wifiP2pManager.requestConnectionInfo(wifiP2pChannel, connectionInfoListener);
     }
-
 
     @Override
     public void onClearDiscoveredDevices() {
-        getDiscoveredDevicesListFragment().clearDiscoveredDevices();
+        getDiscoveryAndConnectionFragment().clearDiscoveredDevices();
+        getCommunicationFragment().stopMulticastReceiverService();
+    }
+
+    private void createAndAcquireMulticastLock() {
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        if (wifiManager != null) {
+            WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock(TAG);
+            multicastLock.acquire();
+        }
     }
 
     private IntentFilter createWifiP2pIntentFilter() {
@@ -152,34 +169,12 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
         registerReceiver(wiFiP2pBroadcastReceiver, wifiP2pIntentFilter);
     }
 
+    private void setViewPagerOnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPagerOnPageChangeListener(viewPager));
+    }
+
     private void discoverDevices() {
         wifiP2pManager.discoverPeers(wifiP2pChannel, new WifiP2pDiscoverActionListener(getApplicationContext()));
-        onClearDiscoveredDevices();
-    }
-
-    private void disconnectFromWifiP2pNetwork() {
-        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(this));
-    }
-
-    private void connectToWifiP2pDevice(WifiP2pDevice wifiP2pDevice) {
-        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(this));
-    }
-
-    private void requestPeers() {
-        PeerListListener peerListListener = getDiscoveredDevicesListFragment();
-        wifiP2pManager.requestPeers(wifiP2pChannel, peerListListener);
-    }
-
-    private void requestConnectionInfo() {
-        ConnectionInfoListener connectionInfoListener = getDiscoveredDevicesListFragment();
-        wifiP2pManager.requestConnectionInfo(wifiP2pChannel, connectionInfoListener);
-    }
-
-    private void updateThisDevice(WifiP2pDevice wifiP2pDevice) {
-        TextView textView = (TextView) findViewById(R.id.my_device_name_text_view);
-        textView.setText(wifiP2pDevice.deviceName);
-        textView = (TextView) findViewById(R.id.my_device_status_text_view);
-        textView.setText(getDeviceStatus(wifiP2pDevice.status));
     }
 
     private WifiP2pConfig createWifiP2pConfig(WifiP2pDevice wifiP2pDevice) {
@@ -189,10 +184,20 @@ public class P2PCommunicationActivity extends ActionBarActivity implements WifiP
         return config;
     }
 
-    private DiscoveredDevicesListFragment getDiscoveredDevicesListFragment() {
-        return (DiscoveredDevicesListFragment) getFragmentManager().findFragmentById(R.id.discovered_devices_list_fragment);
+    private void updateThisDevice(WifiP2pDevice wifiP2pDevice) {
+        TextView textView = (TextView) findViewById(R.id.my_device_name_text_view);
+        textView.setText(wifiP2pDevice.deviceName);
+        textView = (TextView) findViewById(R.id.my_device_status_text_view);
+        textView.setText(getDeviceStatus(wifiP2pDevice.status));
     }
 
+    private DiscoveryAndConnectionFragment getDiscoveryAndConnectionFragment() {
+        return (DiscoveryAndConnectionFragment) p2pCommunicationFragmentPagerAdapter.getItem(0);
+    }
+
+    private CommunicationFragment getCommunicationFragment() {
+        return (CommunicationFragment) p2pCommunicationFragmentPagerAdapter.getItem(1);
+    }
 
     private String getDeviceStatus(int deviceStatus) {
         switch (deviceStatus) {

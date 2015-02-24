@@ -45,79 +45,44 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="bottom"/>
+                android:gravity="bottom" />
 
             <TextView
                 android:id="@+id/my_device_status_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="top"/>
+                android:gravity="top" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/am_i_group_owner_question_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="bottom" />
+
+            <TextView
+                android:id="@+id/group_owner_ip_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.v4.view.ViewPager
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/available_devices_capital_letters"
-            android:layout_alignParentLeft="true" />
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/search_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:id="@+id/discover_devices_progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    style="?android:attr/progressBarStyle"></ProgressBar>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/discover_devices_search_text_view"
-                    android:text="@string/searching_dots"
-                    android:layout_alignParentLeft="true" />
-
-                </LinearLayout>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/holo_blue_light" />
-
-    <TextView
-        android:id="@+id/no_devices_found_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_devices_found" />
-
-    <fragment
-        class="no.bouvet.p2pcommunication.fragments.DiscoveredDevicesListFragment"
-        tools:layout="@layout/discovered_devices_list_fragment"
-        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/discovered_devices_list_fragment"></fragment>
+        android:id="@+id/pager">
+
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

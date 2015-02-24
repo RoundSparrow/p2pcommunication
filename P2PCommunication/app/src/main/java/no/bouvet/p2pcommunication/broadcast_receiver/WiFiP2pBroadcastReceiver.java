@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.bouvet.p2pcommunication.broadcast_receivers;
+package no.bouvet.p2pcommunication.broadcast_receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,16 +26,17 @@ import android.util.Log;
 
 import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listeners.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pBroadcastReceiverListener;
 
 public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
-    private WifiP2pListener wifiP2pListener;
+    public static final String TAG = "WiFiP2pBroadcastReceiver";
+    private WifiP2pBroadcastReceiverListener wifiP2pBroadcastReceiverListener;
     private final Context context;
 
-    public WiFiP2pBroadcastReceiver(Context context, WifiP2pListener wifiP2pListener) {
+    public WiFiP2pBroadcastReceiver(Context context, WifiP2pBroadcastReceiverListener wifiP2pBroadcastReceiverListener) {
         this.context = context;
-        this.wifiP2pListener = wifiP2pListener;
+        this.wifiP2pBroadcastReceiverListener = wifiP2pBroadcastReceiverListener;
     }
 
     @Override
@@ -60,17 +61,17 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
     private void checkIfWifiP2pIsEnabledOrDisabled(Intent intent) {
         int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-            wifiP2pListener.onWifiP2pStateEnabled();
-            Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
+            wifiP2pBroadcastReceiverListener.onWifiP2pStateEnabled();
+            Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
         } else {
-            wifiP2pListener.onWifiP2pStateDisabled();
-            Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
+            wifiP2pBroadcastReceiverListener.onWifiP2pStateDisabled();
+            Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
         }
     }
 
     private void requestPeers() {
-        wifiP2pListener.onRequestPeers();
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
+        wifiP2pBroadcastReceiverListener.onRequestPeers();
+        Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
     }
 
     private NetworkInfo getNetworkInfo(Intent intent) {
@@ -79,18 +80,18 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
     private void checkIfConnectedOrDisconnectedFromAWifiP2pNetwork(NetworkInfo networkInfo) {
         if (networkInfo.isConnected()) {
-            wifiP2pListener.onRequestConnectionInfo();
-            Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.connected_to_p2p_network));
+            wifiP2pBroadcastReceiverListener.onRequestConnectionInfo();
+            Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.connected_to_p2p_network));
         } else {
-            wifiP2pListener.onClearDiscoveredDevices();
-            Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.disconnected_from_p2p_network));
+            wifiP2pBroadcastReceiverListener.onClearDiscoveredDevices();
+            Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.disconnected_from_p2p_network));
         }
     }
 
     private void updateThisDevice(Intent intent) {
         WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-        wifiP2pListener.onThisDeviceChanged(wifiP2pDevice);
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.details_about_this_device_updated));
+        wifiP2pBroadcastReceiverListener.onThisDeviceChanged(wifiP2pDevice);
+        Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.details_about_this_device_updated));
     }
 
 

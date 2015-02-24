@@ -25,9 +25,10 @@
         </activity>
 
         <service
-            android:name=".multicast.MulticastListenerIntentService"
+            android:name=".multicast.MulticastMessageReceiverService"
             android:exported="false" >
         </service>
+
     </application>
 
 </manifest>

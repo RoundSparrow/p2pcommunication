@@ -1,6 +1,6 @@
-package no.bouvet.p2pcommunication.helpers;
+package no.bouvet.p2pcommunication.multicast;
 
-public class MulticastInformationHelper {
+public class MulticastConnectionInfoHelper {
 
     public static final String NETWORK_INTERFACE = "p2p-wlan0-0";
     public static final String MULTICAST_GROUP_ADDRESS = "239.255.10.10";

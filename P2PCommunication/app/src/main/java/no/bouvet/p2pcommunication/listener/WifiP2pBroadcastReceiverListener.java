@@ -1,8 +1,8 @@
-package no.bouvet.p2pcommunication.listeners;
+package no.bouvet.p2pcommunication.listener;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 
-public interface WifiP2pListener {
+public interface WifiP2pBroadcastReceiverListener {
     void onWifiP2pStateEnabled();
 
     void onWifiP2pStateDisabled();

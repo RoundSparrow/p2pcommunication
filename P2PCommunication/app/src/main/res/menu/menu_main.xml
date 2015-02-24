@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".P2PCommunicationActivity">
 
     <item
-        android:id="@+id/enable_button"
+        android:id="@+id/enable_p2p_button"
         android:icon="@drawable/ic_action_on_off"
-        android:title="@string/enable_p2p_button"
+        android:title="@string/p2p_on_off"
         app:showAsAction="ifRoom|withText" />
 
     <item
-        android:id="@+id/discover_button"
+        android:id="@+id/discover_peers_button"
         android:icon="@drawable/ic_action_discover"
         android:title="@string/discover"
         app:showAsAction="ifRoom|withText" />
