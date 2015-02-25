@@ -12,7 +12,7 @@ This project is a 'proof-of-concept' on establishing a P2P connection between tw
 - Install Android Studio Bundle
 - Set up Android SDK with [Android Support Library](https://developer.android.com/tools/support-library/setup.html)
 - Install Git
-- [Set the path to the Git executable](https://github.com/bouvet-bergen/p2pcommunication/wiki/Set-JAVA_HOME-environment-variable)
+- [Set the path to the Git executable](https://github.com/bouvet-bergen/p2pcommunication/wiki/Set-git-executable-path)
 - (Check out the project from GitHub repository)
 
 ### FAQ
