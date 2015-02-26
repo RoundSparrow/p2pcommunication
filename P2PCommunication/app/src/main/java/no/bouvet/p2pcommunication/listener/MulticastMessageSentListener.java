@@ -4,7 +4,4 @@ public interface MulticastMessageSentListener {
 
     public void onMessageFailedToBeMulticasted();
 
-    public String getMulticastMessageFromInputEditText();
-
-    public void clearInputEditText();
 }

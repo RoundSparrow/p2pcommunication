@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:inputType="textMultiLine"
                 android:ems="10"
-                android:id="@+id/multicast_message_input_edit_text" />
+                android:id="@+id/multicast_message_user_input_edit_text" />
 
             <Button
                 android:layout_width="wrap_content"

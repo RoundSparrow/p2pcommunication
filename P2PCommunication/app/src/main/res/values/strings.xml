@@ -9,6 +9,7 @@
     <string name="p2p_enabled">P2P enabled</string>
     <string name="p2p_disabled">P2P disabled</string>
     <string name="p2p_disabled_please_activate">P2P is disabled, please enable from system settings</string>
+    <string name="p2p_unsupported">Device does not support P2P</string>
     <string name="connect">Connect</string>
     <string name="connected">Connected</string>
     <string name="connected_to_p2p_network">Connected to a P2P network</string>
@@ -21,9 +22,13 @@
     <string name="discovery_initiated">Discovery initiated</string>
     <string name="discovery_failed">Discovery failed</string>
     <string name="discovered_devices_list_cleared">Discovered devices list cleared</string>
+    <string name="multicast_chat_capital_letters">MULTICAST CHAT</string>
+    <string name="send_multicast">Send multicast</string>
+    <string name="stopped_listening_for_multicast_messages">Stopped listening for multicast messages</string>
+    <string name="started_listening_for_multicast_messages">Started listening for multicast messages</string>
+    <string name="message_not_multicasted">Message not multicasted</string>
     <string name="busy">Busy</string>
     <string name="internal_error">Internal error</string>
-    <string name="p2p_unsupported">Device does not support P2P</string>
     <string name="unknown_error">Unknown error</string>
     <string name="failed">Failed</string>
     <string name="no_devices_found">No devices found</string>
@@ -40,16 +45,11 @@
     <string name="invitation_sent">Invitation sent</string>
     <string name="am_i_group_owner_question">Am I group owner?</string>
     <string name="group_owner_ip">Group owner IP</string>
-    <string name="send_multicast">Send multicast</string>
-    <string name="multicast_chat_capital_letters">MULTICAST CHAT</string>
     <string name="send">Send</string>
     <string name="tap_to_connect">Tap to connect</string>
-    <string name="listening">Listening</string>
-    <string name="stopped_listening">Stopped listening</string>
-    <string name="message_not_multicasted">Message not multicasted</string>
     <string name="am_i_host_question">Am I host?</string>
     <string name="received">Received</string>
-    <string name="colon">:</string>
     <string name="from">from</string>
+    <string name="colon">:</string>
 
 </resources>

@@ -22,10 +22,10 @@ import no.bouvet.p2pcommunication.broadcastreceiver.WiFiP2pBroadcastReceiver;
 import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
 import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 import no.bouvet.p2pcommunication.listener.ViewPagerOnPageChangeListener;
-import no.bouvet.p2pcommunication.listener.WifiP2pBroadcastReceiverListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
-public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pBroadcastReceiverListener {
+public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pListener {
 
     public static final String TAG = "P2PCommunicationActivity";
     private P2pCommunicationWifiP2pManager p2pCommunicationWifiP2pManager;

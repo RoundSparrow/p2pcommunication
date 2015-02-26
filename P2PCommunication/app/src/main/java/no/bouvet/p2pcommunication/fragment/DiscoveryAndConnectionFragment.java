@@ -18,10 +18,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.DiscoveredDevicesListAdapter;
-import no.bouvet.p2pcommunication.listener.WifiP2pBroadcastReceiverListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pDisconnectButtonOnClickListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 
 public class DiscoveryAndConnectionFragment extends ListFragment implements PeerListListener {
 
@@ -56,7 +56,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Peer
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
         WifiP2pDevice wifiP2pDevice = (WifiP2pDevice) getListAdapter().getItem(position);
-        ((WifiP2pBroadcastReceiverListener) getActivity()).onConnect(wifiP2pDevice);
+        ((WifiP2pListener) getActivity()).onConnect(wifiP2pDevice);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Peer
         setNoDevicesFoundTextViewVisibility(View.GONE);
         if (discoveredDevices.size() == 0) {
             setNoDevicesFoundTextViewVisibility(View.VISIBLE);
-            Log.i(DiscoveryAndConnectionFragment.TAG, getString(R.string.no_devices_found));
+            Log.i(TAG, getString(R.string.no_devices_found));
         }
     }
 
@@ -75,18 +75,13 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Peer
         if (discoveredDevices != null) {
             discoveredDevices.clear();
             discoveredDevicesListAdapter.notifyDataSetChanged();
-            Log.i(DiscoveryAndConnectionFragment.TAG, getString(R.string.discovered_devices_list_cleared));
+            Log.i(TAG, getString(R.string.discovered_devices_list_cleared));
         }
     }
 
     private void setDisconnectButtonOnClickListener() {
         Button disconnectButton = (Button) discoveredDevicesFragmentView.findViewById(R.id.disconnect_button);
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((WifiP2pBroadcastReceiverListener) getActivity()).onDisconnect();
-            }
-        });
+        disconnectButton.setOnClickListener(new WifiP2pDisconnectButtonOnClickListener((WifiP2pListener) getActivity()));
     }
 
     private void createAndSetListAdapter() {

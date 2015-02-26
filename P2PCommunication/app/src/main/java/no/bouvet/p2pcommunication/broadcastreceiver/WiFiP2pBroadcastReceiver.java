@@ -25,17 +25,17 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.WifiP2pBroadcastReceiverListener;
+import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 
 public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = "WiFiP2pBroadcastReceiver";
-    private WifiP2pBroadcastReceiverListener wifiP2pBroadcastReceiverListener;
+    private WifiP2pListener wifiP2pListener;
     private final Context context;
 
-    public WiFiP2pBroadcastReceiver(Context context, WifiP2pBroadcastReceiverListener wifiP2pBroadcastReceiverListener) {
+    public WiFiP2pBroadcastReceiver(Context context, WifiP2pListener wifiP2pListener) {
         this.context = context;
-        this.wifiP2pBroadcastReceiverListener = wifiP2pBroadcastReceiverListener;
+        this.wifiP2pListener = wifiP2pListener;
     }
 
     @Override
@@ -60,16 +60,16 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
     private void checkIfWifiP2pIsEnabledOrDisabled(Intent intent) {
         int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-            wifiP2pBroadcastReceiverListener.onWifiP2pStateEnabled();
+            wifiP2pListener.onWifiP2pStateEnabled();
             Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
         } else {
-            wifiP2pBroadcastReceiverListener.onWifiP2pStateDisabled();
+            wifiP2pListener.onWifiP2pStateDisabled();
             Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
         }
     }
 
     private void requestPeers() {
-        wifiP2pBroadcastReceiverListener.onRequestPeers();
+        wifiP2pListener.onRequestPeers();
         Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
     }
 
@@ -79,17 +79,17 @@ public class WiFiP2pBroadcastReceiver extends BroadcastReceiver {
 
     private void checkIfConnectedOrDisconnectedFromAWifiP2pNetwork(NetworkInfo networkInfo) {
         if (networkInfo.isConnected()) {
-            wifiP2pBroadcastReceiverListener.onRequestConnectionInfo();
+            wifiP2pListener.onRequestConnectionInfo();
             Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.connected_to_p2p_network));
         } else {
-            wifiP2pBroadcastReceiverListener.onClearDiscoveredDevices();
+            wifiP2pListener.onClearDiscoveredDevices();
             Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.disconnected_from_p2p_network));
         }
     }
 
     private void updateThisDevice(Intent intent) {
         WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-        wifiP2pBroadcastReceiverListener.onThisDeviceChanged(wifiP2pDevice);
+        wifiP2pListener.onThisDeviceChanged(wifiP2pDevice);
         Log.i(WiFiP2pBroadcastReceiver.TAG, context.getString(R.string.details_about_this_device_updated));
     }
 

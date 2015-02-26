@@ -18,32 +18,25 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
 
     public static final String TAG = "SendMulticastMessageAsyncTask";
     private MulticastMessageSentListener multicastMessageSentListener;
-    private String multicastMessage;
-    private String networkInterfaceString;
-    private String multicastGroupAddressString;
-    private int port;
+    private UserInputHandler userInputHandler;
 
 
-    public SendMulticastMessageAsyncTask(MulticastMessageSentListener multicastMessageSentListener) {
+    public SendMulticastMessageAsyncTask(MulticastMessageSentListener multicastMessageSentListener, UserInputHandler userInputHandler) {
         this.multicastMessageSentListener = multicastMessageSentListener;
-        this.networkInterfaceString = MulticastConnectionInfoHelper.NETWORK_INTERFACE;
-        this.multicastGroupAddressString = MulticastConnectionInfoHelper.MULTICAST_GROUP_ADDRESS;
-        this.port = MulticastConnectionInfoHelper.MULTICAST_PORT;
+        this.userInputHandler = userInputHandler;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         boolean success = false;
         try {
-            NetworkInterface networkInterface = getNetworkInterface(networkInterfaceString);
-            InetAddress multicastGroupAddress = getMulticastGroupAddress(multicastGroupAddressString);
-            MulticastSocket multicastSocket = createMulticastSocket(networkInterface, multicastGroupAddress, port);
-            multicastMessage = multicastMessageSentListener.getMulticastMessageFromInputEditText();
-            DatagramPacket datagramPacket = new DatagramPacket(multicastMessage.getBytes(), multicastMessage.length(), multicastGroupAddress, port);
+            MulticastSocket multicastSocket = createMulticastSocket();
+            String multicastMessage = userInputHandler.getMulticastMessageFromUserInput();
+            DatagramPacket datagramPacket = new DatagramPacket(multicastMessage.getBytes(), multicastMessage.length(), getMulticastGroupAddress(), getPort());
             multicastSocket.send(datagramPacket);
             success = true;
         } catch (IOException ioException) {
-            Log.e(SendMulticastMessageAsyncTask.TAG, ioException.toString());
+            Log.e(TAG, ioException.toString());
         }
         return success;
     }
@@ -53,21 +46,26 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
         if (!success) {
             multicastMessageSentListener.onMessageFailedToBeMulticasted();
         }
+        userInputHandler.clearUserInput();
     }
 
-    private MulticastSocket createMulticastSocket(NetworkInterface networkInterface, InetAddress multicastGroupAddress, int port) throws IOException {
-        MulticastSocket multicastSocket = new MulticastSocket(port);
-        multicastSocket.setNetworkInterface(networkInterface);
-        multicastSocket.joinGroup(new InetSocketAddress(multicastGroupAddress, port), networkInterface);
+    private MulticastSocket createMulticastSocket() throws IOException {
+        MulticastSocket multicastSocket = new MulticastSocket(getPort());
+        multicastSocket.setNetworkInterface(getNetworkInterface());
+        multicastSocket.joinGroup(new InetSocketAddress(getMulticastGroupAddress(), getPort()), getNetworkInterface());
         return multicastSocket;
     }
 
-    private NetworkInterface getNetworkInterface(String networkInterfaceName) throws SocketException {
-        return NetworkInterface.getByName(networkInterfaceName);
+    private NetworkInterface getNetworkInterface() throws SocketException {
+        return NetworkInterface.getByName(MulticastConnectionInfoHelper.NETWORK_INTERFACE_NAME);
     }
 
-    private InetAddress getMulticastGroupAddress(String multicastGroupAddress) throws UnknownHostException {
-        return InetAddress.getByName(multicastGroupAddress);
+    private InetAddress getMulticastGroupAddress() throws UnknownHostException {
+        return InetAddress.getByName(MulticastConnectionInfoHelper.MULTICAST_GROUP_IP);
+    }
+
+    private int getPort() {
+        return MulticastConnectionInfoHelper.MULTICAST_PORT;
     }
 
 
