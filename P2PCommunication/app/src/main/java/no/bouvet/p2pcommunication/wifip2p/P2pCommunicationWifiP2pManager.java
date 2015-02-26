@@ -6,9 +6,10 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 
+import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.listener.WifiP2pConnectActionListener;
 import no.bouvet.p2pcommunication.listener.WifiP2pDisconnectActionListener;
 import no.bouvet.p2pcommunication.listener.WifiP2pDiscoverActionListener;
@@ -25,11 +26,11 @@ public class P2pCommunicationWifiP2pManager {
         this.wifiP2pChannel = createWifiP2pChannel();
     }
 
-    public void onDisconnect() {
+    public void disconnectFromWifiP2pNetwork() {
         wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(context));
     }
 
-    public void onConnect(WifiP2pDevice wifiP2pDevice) {
+    public void connectToWifiP2pDevice(WifiP2pDevice wifiP2pDevice) {
         wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(context));
     }
 
@@ -45,6 +46,19 @@ public class P2pCommunicationWifiP2pManager {
         wifiP2pManager.requestConnectionInfo(wifiP2pChannel, connectionInfoListener);
     }
 
+    public static String getFailureReason(Context context, int reasonCode) {
+        switch (reasonCode) {
+            case WifiP2pManager.BUSY:
+                return context.getString(R.string.busy);
+            case WifiP2pManager.ERROR:
+                return context.getString(R.string.internal_error);
+            case WifiP2pManager.P2P_UNSUPPORTED:
+                return context.getString(R.string.p2p_unsupported);
+            default:
+                return context.getString(R.string.unknown_error);
+        }
+    }
+
     private WifiP2pManager getWifiP2pManager() {
         return (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
     }
@@ -54,9 +68,10 @@ public class P2pCommunicationWifiP2pManager {
     }
 
     private WifiP2pConfig createWifiP2pConfig(WifiP2pDevice wifiP2pDevice) {
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = wifiP2pDevice.deviceAddress;
-        config.wps.setup = WpsInfo.PBC;
-        return config;
+        WifiP2pConfig wifiP2pConfig = new WifiP2pConfig();
+        wifiP2pConfig.deviceAddress = wifiP2pDevice.deviceAddress;
+        wifiP2pConfig.wps.setup = WpsInfo.PBC;
+        return wifiP2pConfig;
     }
+
 }

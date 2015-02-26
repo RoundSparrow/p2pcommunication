@@ -13,11 +13,11 @@
     <string name="connect">Connect</string>
     <string name="connected">Connected</string>
     <string name="connected_to_p2p_network">Connected to a P2P network</string>
-    <string name="connect_failed">Connect failed. Please retry.</string>
+    <string name="connect_failed">Connect failed</string>
     <string name="disconnect">Disconnect</string>
     <string name="disconnected">Disconnected</string>
     <string name="disconnected_from_p2p_network">Disconnected from a P2P network</string>
-    <string name="disconnect_failed">Disconnect failed. Please retry.</string>
+    <string name="disconnect_failed">Disconnect failed</string>
     <string name="discover">Discover</string>
     <string name="discovery_initiated">Discovery initiated</string>
     <string name="discovery_failed">Discovery failed</string>

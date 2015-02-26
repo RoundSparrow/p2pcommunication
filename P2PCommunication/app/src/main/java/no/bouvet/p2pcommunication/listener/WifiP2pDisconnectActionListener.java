@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
+import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class WifiP2pDisconnectActionListener implements WifiP2pManager.ActionListener {
 
@@ -24,9 +25,11 @@ public class WifiP2pDisconnectActionListener implements WifiP2pManager.ActionLis
     }
 
     @Override
-    public void onFailure(int reason) {
-        Toast.makeText(context, context.getString(R.string.disconnect_failed), Toast.LENGTH_SHORT).show();
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.disconnect_failed));
+    public void onFailure(int reasonCode) {
+        String reason = context.getString(R.string.disconnect_failed) + ": ";
+        reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
+        Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
+        Log.w(P2PCommunicationActivity.TAG, reason);
     }
 
 }

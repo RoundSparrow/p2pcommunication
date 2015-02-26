@@ -27,7 +27,7 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
     private static CommunicationFragment communicationFragment;
     private View communicationFragmentView;
     private TextView multicastMessageLogTextView;
-    private EditText multicastMessageUserInputEditText;
+    private EditText userInputEditText;
     private Intent multicastReceiverServiceIntent;
 
     public static Fragment getInstance() {
@@ -46,8 +46,8 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findAndSetMulticastMessageLogAndMulticastMessageInputViews();
-        setSendMulticastButtonOnClickListener();
+        findAndSetMulticastMessageLogTextViewAndUserInputEditText();
+        setSendMulticastMessageButtonOnClickListener();
     }
 
     @Override
@@ -57,12 +57,12 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
 
     @Override
     public String getMulticastMessageFromUserInput() {
-        return multicastMessageUserInputEditText.getText().toString();
+        return userInputEditText.getText().toString();
     }
 
     @Override
     public void clearUserInput() {
-        multicastMessageUserInputEditText.setText("");
+        userInputEditText.setText("");
     }
 
     @Override
@@ -83,14 +83,14 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
         }
     }
 
-    private void findAndSetMulticastMessageLogAndMulticastMessageInputViews() {
+    private void findAndSetMulticastMessageLogTextViewAndUserInputEditText() {
         multicastMessageLogTextView = (TextView) communicationFragmentView.findViewById(R.id.multicast_message_log_text_view);
-        multicastMessageUserInputEditText = (EditText) communicationFragmentView.findViewById(R.id.multicast_message_user_input_edit_text);
+        userInputEditText = (EditText) communicationFragmentView.findViewById(R.id.user_input_edit_text);
     }
 
-    private void setSendMulticastButtonOnClickListener() {
-        Button sendMulticastButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_button);
-        sendMulticastButton.setOnClickListener(new SendMulticastMessageButtonOnClickListener(this, this));
+    private void setSendMulticastMessageButtonOnClickListener() {
+        Button sendMulticastMessageButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_message_button);
+        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageButtonOnClickListener(this, this));
     }
 
     private void setGroupHostInfo(WifiP2pInfo wifiP2pInfo) {

@@ -9,12 +9,10 @@ import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 
 public class P2pCommunicationFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private FragmentManager fragmentManager;
-    private final int fragmentCount = 2;
+    private static final int FRAGMENT_COUNT = 2;
 
     public P2pCommunicationFragmentPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -31,6 +29,14 @@ public class P2pCommunicationFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return fragmentCount;
+        return FRAGMENT_COUNT;
+    }
+
+    public DiscoveryAndConnectionFragment getDiscoveryAndConnectionFragment() {
+        return (DiscoveryAndConnectionFragment) getItem(0);
+    }
+
+    public CommunicationFragment getCommunicationFragment() {
+        return (CommunicationFragment) getItem(1);
     }
 }

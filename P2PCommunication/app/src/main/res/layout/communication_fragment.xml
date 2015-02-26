@@ -8,9 +8,9 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:gravity="center_vertical"
-        android:text="@string/multicast_chat_capital_letters"
-        android:layout_alignParentLeft="true" />
+        android:text="@string/multicast_chat_capital_letters" />
 
     <View
         android:layout_width="fill_parent"
@@ -19,31 +19,31 @@
         android:background="@android:color/holo_blue_light" />
 
     <TextView
+        android:id="@+id/multicast_message_log_text_view"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/multicast_message_log_text_view" />
+        android:layout_weight="1" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/multicast_message_user_input_edit_text" />
+        <EditText
+            android:id="@+id/user_input_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:inputType="textMultiLine"
+            android:ems="10" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/send"
-                android:id="@+id/send_multicast_button"/>
+        <Button
+            android:id="@+id/send_multicast_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/send" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
