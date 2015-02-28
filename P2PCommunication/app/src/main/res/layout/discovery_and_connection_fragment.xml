@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"
-            android:text="@string/available_devices_capital_letters" />
+            android:text="@string/available_devices_capital_letters"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -74,17 +74,24 @@
             android:clickable="true" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/disconnect_button"
+                android:id="@+id/left_bottom_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/disconnect" />
+                style="?android:attr/buttonBarButtonStyle"/>
 
+            <Button
+                android:id="@+id/right_bottom_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
         </LinearLayout>
 
 

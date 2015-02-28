@@ -1,4 +1,4 @@
-package no.bouvet.p2pcommunication.listener;
+package no.bouvet.p2pcommunication.listener.multicast;
 
 public interface MulticastMessageSentListener {
 

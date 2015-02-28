@@ -1,4 +1,4 @@
-package no.bouvet.p2pcommunication.listener;
+package no.bouvet.p2pcommunication.listener.onpagechange;
 
 import android.support.v4.view.ViewPager;
 

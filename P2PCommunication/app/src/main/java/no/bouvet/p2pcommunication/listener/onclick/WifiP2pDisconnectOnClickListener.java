@@ -1,13 +1,15 @@
-package no.bouvet.p2pcommunication.listener;
+package no.bouvet.p2pcommunication.listener.onclick;
 
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class WifiP2pDisconnectButtonOnClickListener implements OnClickListener {
+import no.bouvet.p2pcommunication.listener.WifiP2pListener;
+
+public class WifiP2pDisconnectOnClickListener implements OnClickListener {
 
     private WifiP2pListener wifiP2pListener;
 
-    public WifiP2pDisconnectButtonOnClickListener(WifiP2pListener wifiP2pListener) {
+    public WifiP2pDisconnectOnClickListener(WifiP2pListener wifiP2pListener) {
         this.wifiP2pListener = wifiP2pListener;
     }
 

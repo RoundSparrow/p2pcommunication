@@ -1,8 +1,6 @@
 package no.bouvet.p2pcommunication.fragment;
 
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.Bundle;
 import android.os.Messenger;
 import android.support.v4.app.Fragment;
@@ -14,16 +12,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.MulticastMessageReceivedListener;
-import no.bouvet.p2pcommunication.listener.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceivedHandler;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceiverService;
 import no.bouvet.p2pcommunication.multicast.SendMulticastMessageButtonOnClickListener;
 import no.bouvet.p2pcommunication.multicast.UserInputHandler;
 
-public class CommunicationFragment extends Fragment implements UserInputHandler, MulticastMessageReceivedListener, MulticastMessageSentListener, ConnectionInfoListener {
+public class CommunicationFragment extends Fragment implements MulticastListener, MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
 
-    public static final String TAG = "CommunicationFragment";
     private static CommunicationFragment communicationFragment;
     private View communicationFragmentView;
     private TextView multicastMessageLogTextView;
@@ -46,8 +44,29 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findAndSetMulticastMessageLogTextViewAndUserInputEditText();
-        setSendMulticastMessageButtonOnClickListener();
+
+        multicastMessageLogTextView = (TextView) communicationFragmentView.findViewById(R.id.multicast_message_log_text_view);
+        userInputEditText = (EditText) communicationFragmentView.findViewById(R.id.user_input_edit_text);
+        Button sendMulticastMessageButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_message_button);
+        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageButtonOnClickListener(this, this));
+    }
+
+    @Override
+    public void onStartReceivingMulticastMessages() {
+        multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
+        getActivity().startService(multicastReceiverServiceIntent);
+    }
+
+    @Override
+    public void onStopReceivingMulticastMessages() {
+        if (multicastReceiverServiceIntent != null) {
+            getActivity().stopService(multicastReceiverServiceIntent);
+        }
+    }
+
+    @Override
+    public void onMulticastMessageReceived(String receivedMessage, String senderIpAddress) {
+        multicastMessageLogTextView.setText(multicastMessageLogTextView.getText() + senderIpAddress + ": " + receivedMessage + "\n");
     }
 
     @Override
@@ -56,54 +75,13 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
     }
 
     @Override
-    public String getMulticastMessageFromUserInput() {
+    public String getMulticastMessageToBeSentFromUserInput() {
         return userInputEditText.getText().toString();
     }
 
     @Override
     public void clearUserInput() {
         userInputEditText.setText("");
-    }
-
-    @Override
-    public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
-        setGroupHostInfo(wifiP2pInfo);
-        multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
-        getActivity().startService(multicastReceiverServiceIntent);
-    }
-
-    @Override
-    public void onMulticastMessageReceived(String receivedMessage, String senderIpAddress) {
-        multicastMessageLogTextView.setText(multicastMessageLogTextView.getText() + senderIpAddress + ": " + receivedMessage + "\n");
-    }
-
-    public void stopMulticastReceiverService() {
-        if (multicastReceiverServiceIntent != null) {
-            getActivity().stopService(multicastReceiverServiceIntent);
-        }
-    }
-
-    private void findAndSetMulticastMessageLogTextViewAndUserInputEditText() {
-        multicastMessageLogTextView = (TextView) communicationFragmentView.findViewById(R.id.multicast_message_log_text_view);
-        userInputEditText = (EditText) communicationFragmentView.findViewById(R.id.user_input_edit_text);
-    }
-
-    private void setSendMulticastMessageButtonOnClickListener() {
-        Button sendMulticastMessageButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_message_button);
-        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageButtonOnClickListener(this, this));
-    }
-
-    private void setGroupHostInfo(WifiP2pInfo wifiP2pInfo) {
-        TextView groupOwnerQuestionTextView = (TextView) getActivity().findViewById(R.id.am_i_group_owner_question_text_view);
-        TextView groupOwnerIpTextView = (TextView) getActivity().findViewById(R.id.group_owner_ip_text_view);
-        groupOwnerQuestionTextView.setText(getResources().getString(R.string.am_i_host_question));
-        if (wifiP2pInfo.isGroupOwner) {
-            groupOwnerQuestionTextView.setText(groupOwnerQuestionTextView.getText() + " " + getResources().getString(R.string.yes));
-            groupOwnerIpTextView.setText("IP: " + wifiP2pInfo.groupOwnerAddress.getHostAddress());
-        } else {
-            groupOwnerQuestionTextView.setText(groupOwnerQuestionTextView.getText() + " " + getResources().getString(R.string.no));
-            groupOwnerIpTextView.setText("");
-        }
     }
 
     private Intent createMulticastReceiverServiceIntent() {
@@ -113,6 +91,4 @@ public class CommunicationFragment extends Fragment implements UserInputHandler,
         multicastReceiverServiceIntent.putExtra(MulticastMessageReceiverService.EXTRA_MESSENGER, new Messenger(multicastMessageReceivedHandler));
         return multicastReceiverServiceIntent;
     }
-
-
 }

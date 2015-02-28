@@ -15,17 +15,19 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
-import no.bouvet.p2pcommunication.listener.ViewPagerOnPageChangeListener;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
+import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
+import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
+import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
-public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pListener {
+public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pListener, MulticastListener {
 
     public static final String TAG = "P2PCommunicationActivity";
     private P2pCommunicationWifiP2pManager p2pCommunicationWifiP2pManager;
@@ -66,15 +68,8 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.enable_p2p_button:
+            case R.id.enable_p2p_menu_item:
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                return true;
-            case R.id.discover_peers_button:
-                if (wifiP2pEnabled) {
-                    discoverDevices();
-                } else {
-                    Toast.makeText(this, R.string.p2p_disabled_please_activate, Toast.LENGTH_SHORT).show();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -92,13 +87,19 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     }
 
     @Override
-    public void onDisconnect() {
-        p2pCommunicationWifiP2pManager.disconnectFromWifiP2pNetwork();
+    public void onStartPeerDiscovery() {
+        if (wifiP2pEnabled) {
+            DiscoveryStateListener discoveryStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+            p2pCommunicationWifiP2pManager.startPeerDiscovery(discoveryStateListener);
+        } else {
+            Toast.makeText(this, R.string.p2p_disabled_please_activate, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onConnect(WifiP2pDevice wifiP2pDevice) {
-        p2pCommunicationWifiP2pManager.connectToWifiP2pDevice(wifiP2pDevice);
+    public void onStopPeerDiscovery() {
+        DiscoveryStateListener discoveryStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.stopPeerDiscovery(discoveryStateListener);
     }
 
     @Override
@@ -108,25 +109,47 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     }
 
     @Override
+    public void onClearDiscoveredPeers() {
+        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().clearDiscoveredWifiP2pDevices();
+    }
+
+    @Override
+    public void onConnect(WifiP2pDevice wifiP2pDevice) {
+        p2pCommunicationWifiP2pManager.connectToWifiP2pDevice(wifiP2pDevice);
+    }
+
+    @Override
+    public void onDisconnect() {
+        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.disconnectFromWifiP2pNetwork(connectionStateListener);
+    }
+
+    @Override
+    public void onMultiConnect() {
+        p2pCommunicationWifiP2pManager.createGroup();
+    }
+
+    @Override
+    public void onRequestConnectionInfo() {
+        ConnectionInfoListener connectionInfoListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.requestConnectionInfo(connectionInfoListener);
+    }
+
+    @Override
     public void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice) {
         updateMyDeviceTextViews(wifiP2pDevice);
     }
 
     @Override
-    public void onRequestConnectionInfo() {
-        ConnectionInfoListener connectionInfoListener = p2pCommunicationFragmentPagerAdapter.getCommunicationFragment();
-        p2pCommunicationWifiP2pManager.requestConnectionInfo(connectionInfoListener);
+    public void onStartReceivingMulticastMessages() {
+        MulticastListener multicastListener = p2pCommunicationFragmentPagerAdapter.getCommunicationFragment();
+        multicastListener.onStartReceivingMulticastMessages();
     }
 
     @Override
-    public void onClearDiscoveredDevices() {
-        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().clearDiscoveredDevices();
-        p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().stopMulticastReceiverService();
-    }
-
-    public void setSearchLayoutVisibility(int visibility) {
-        LinearLayout searchLayout = (LinearLayout) findViewById(R.id.search_layout);
-        searchLayout.setVisibility(visibility);
+    public void onStopReceivingMulticastMessages() {
+        MulticastListener multicastListener = p2pCommunicationFragmentPagerAdapter.getCommunicationFragment();
+        multicastListener.onStopReceivingMulticastMessages();
     }
 
     private void createAndAcquireMulticastLock() {
@@ -150,10 +173,6 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
         wifiP2pIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         wifiP2pIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         return wifiP2pIntentFilter;
-    }
-
-    private void discoverDevices() {
-        p2pCommunicationWifiP2pManager.discoverPeers();
     }
 
     private void updateMyDeviceTextViews(WifiP2pDevice wifiP2pDevice) {
@@ -182,6 +201,4 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
                 return getString(R.string.unknown);
         }
     }
-
-
 }

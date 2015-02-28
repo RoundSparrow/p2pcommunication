@@ -2,7 +2,7 @@ package no.bouvet.p2pcommunication.multicast;
 
 import android.view.View;
 
-import no.bouvet.p2pcommunication.listener.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 
 public class SendMulticastMessageButtonOnClickListener implements View.OnClickListener {
 

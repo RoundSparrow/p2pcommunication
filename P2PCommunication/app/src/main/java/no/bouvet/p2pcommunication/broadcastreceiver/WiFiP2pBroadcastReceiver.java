@@ -81,7 +81,7 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
             wifiP2pListener.onRequestConnectionInfo();
             Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.connected_to_p2p_network));
         } else {
-            wifiP2pListener.onClearDiscoveredDevices();
+            wifiP2pListener.onClearDiscoveredPeers();
             Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.disconnected_from_p2p_network));
         }
     }

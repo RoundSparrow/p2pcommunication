@@ -51,5 +51,15 @@
     <string name="received">Received</string>
     <string name="from">from</string>
     <string name="colon">:</string>
+    <string name="multi_connect">Multi-connect</string>
+    <string name="group_created">Group created</string>
+    <string name="could_not_create_group">Could not create group</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
+    <string name="discovery_stopped">Discovery stopped</string>
+    <string name="could_not_stop_discovery">Could not stop discovery</string>
+    <string name="could_not_start_discovery">Could not start discovery</string>
+    <string name="discovery_started">Discovery started</string>
+    <string name="this_device_is_not_group_owner">This device is not the group owner</string>
 
 </resources>

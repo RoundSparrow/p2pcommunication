@@ -1,9 +1,8 @@
-package no.bouvet.p2pcommunication.listener;
+package no.bouvet.p2pcommunication.listener.wifip2paction;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import no.bouvet.p2pcommunication.P2PCommunicationActivity;
@@ -20,9 +19,6 @@ public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListen
 
     @Override
     public void onSuccess() {
-        if (context instanceof P2PCommunicationActivity) {
-            ((P2PCommunicationActivity) context).setSearchLayoutVisibility(View.GONE);
-        }
         Toast.makeText(context, context.getString(R.string.invitation_sent), Toast.LENGTH_SHORT).show();
         Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.invitation_sent));
     }

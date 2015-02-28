@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import no.bouvet.p2pcommunication.listener.MulticastMessageReceivedListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
 
 public class MulticastMessageReceivedHandler extends Handler {
 

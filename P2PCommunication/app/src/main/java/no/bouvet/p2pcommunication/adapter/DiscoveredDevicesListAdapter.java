@@ -17,17 +17,23 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private Context context;
     private List<WifiP2pDevice> deviceList;
+    private boolean showCheckBox;
 
     public DiscoveredDevicesListAdapter(Context context, int resource, List<WifiP2pDevice> deviceList) {
         super(context, resource, deviceList);
         this.context = context;
         this.deviceList = deviceList;
+        showCheckBox = false;
+    }
+
+    public void setShowCheckBox(boolean showCheckBox) {
+        this.showCheckBox = showCheckBox;
     }
 
     static class ViewHolder {
         protected TextView deviceNameTextView;
         protected TextView deviceStatusTextView;
-        protected CheckBox deviceCheckBox;
+        protected CheckBox checkBox;
     }
 
     @Override
@@ -48,14 +54,18 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
         viewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
         viewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
 
+        if (showCheckBox) {
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+        }
+
         return convertView;
     }
 
     private ViewHolder createViewHolderAndFindViews(View convertView) {
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.deviceNameTextView = (TextView) convertView.findViewById(R.id.peer_discovery_device_name_text_view);
-        viewHolder.deviceStatusTextView = (TextView) convertView.findViewById(R.id.peer_discovery_device_status_text_view);
-        viewHolder.deviceCheckBox = (CheckBox) convertView.findViewById(R.id.peer_discovery_row_checkbox);
+        viewHolder.deviceNameTextView = (TextView) convertView.findViewById(R.id.discovered_device_name_text_view);
+        viewHolder.deviceStatusTextView = (TextView) convertView.findViewById(R.id.discovered_device_status_text_view);
+        viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
         return viewHolder;
     }
 

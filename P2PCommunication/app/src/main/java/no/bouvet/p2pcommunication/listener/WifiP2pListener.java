@@ -3,19 +3,26 @@ package no.bouvet.p2pcommunication.listener;
 import android.net.wifi.p2p.WifiP2pDevice;
 
 public interface WifiP2pListener {
+
     void onWifiP2pStateEnabled();
 
     void onWifiP2pStateDisabled();
 
-    void onDisconnect();
+    void onStartPeerDiscovery();
 
-    void onConnect(WifiP2pDevice wifiP2pDevice);
+    void onStopPeerDiscovery();
 
     void onRequestPeers();
 
-    void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice);
+    void onClearDiscoveredPeers();
+
+    void onConnect(WifiP2pDevice wifiP2pDevice);
+
+    void onDisconnect();
+
+    void onMultiConnect();
 
     void onRequestConnectionInfo();
 
-    void onClearDiscoveredDevices();
+    void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice);
 }

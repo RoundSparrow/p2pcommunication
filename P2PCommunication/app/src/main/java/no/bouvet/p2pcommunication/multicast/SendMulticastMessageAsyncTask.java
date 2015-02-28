@@ -12,7 +12,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import no.bouvet.p2pcommunication.listener.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 
 public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boolean> {
 
@@ -31,7 +31,7 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
         boolean success = false;
         try {
             MulticastSocket multicastSocket = createMulticastSocket();
-            String multicastMessage = userInputHandler.getMulticastMessageFromUserInput();
+            String multicastMessage = userInputHandler.getMulticastMessageToBeSentFromUserInput();
             DatagramPacket datagramPacket = new DatagramPacket(multicastMessage.getBytes(), multicastMessage.length(), getMulticastGroupAddress(), getPort());
             multicastSocket.send(datagramPacket);
             success = true;
