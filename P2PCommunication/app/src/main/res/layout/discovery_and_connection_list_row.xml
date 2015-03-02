@@ -3,13 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="?android:listPreferredItemHeight"
     android:background="?android:attr/activatedBackgroundIndicator"
-    android:padding="@dimen/padding_items_expandable_listview">
+    android:padding="@dimen/header_linear_layout_padding">
 
     <ImageView
-        android:id="@+id/android_icon"
+        android:id="@+id/phone_icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:src="@drawable/ic_launcher_icon"
+        android:layout_marginRight="@dimen/image_view_margin_right"
+        android:src="@drawable/ic_action_phone"
         android:focusable="false"
         android:clickable="false"/>
 
@@ -43,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:focusable="false"
-        android:clickable="true"/>
+        android:clickable="true"
+        style="?android:attr/checkboxStyle" />
 
 </LinearLayout>

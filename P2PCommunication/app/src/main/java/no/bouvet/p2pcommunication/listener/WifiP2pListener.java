@@ -14,7 +14,7 @@ public interface WifiP2pListener {
 
     void onRequestPeers();
 
-    void onClearDiscoveredPeers();
+    void onResetData();
 
     void onConnect(WifiP2pDevice wifiP2pDevice);
 

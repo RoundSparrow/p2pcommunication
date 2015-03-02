@@ -5,12 +5,12 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.util.Log;
 import android.widget.Toast;
 
-import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class WifiP2pCreateGroupActionListener implements ActionListener {
 
+    private static final String TAG = WifiP2pCreateGroupActionListener.class.getSimpleName();
     private final Context context;
 
     public WifiP2pCreateGroupActionListener(Context context) {
@@ -19,8 +19,7 @@ public class WifiP2pCreateGroupActionListener implements ActionListener {
 
     @Override
     public void onSuccess() {
-        Toast.makeText(context, context.getString(R.string.group_created), Toast.LENGTH_SHORT).show();
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.group_created));
+        Log.i(TAG, context.getString(R.string.group_created));
     }
 
     @Override
@@ -28,6 +27,6 @@ public class WifiP2pCreateGroupActionListener implements ActionListener {
         String reason = context.getString(R.string.could_not_create_group);
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
-        Log.i(P2PCommunicationActivity.TAG, reason);
+        Log.i(TAG, reason);
     }
 }

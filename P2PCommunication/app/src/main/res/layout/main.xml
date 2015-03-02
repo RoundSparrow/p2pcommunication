@@ -25,14 +25,14 @@
         android:layout_width="fill_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:background="?android:attr/activatedBackgroundIndicator"
-        android:padding="3dip">
+        android:padding="@dimen/header_linear_layout_padding">
 
         <ImageView
-            android:id="@+id/android_icon"
+            android:id="@+id/phone_icon"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginRight="2dp"
-            android:src="@drawable/ic_launcher_icon" />
+            android:layout_marginRight="@dimen/image_view_margin_right"
+            android:src="@drawable/ic_action_phone" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -62,14 +62,14 @@
             android:layout_height="fill_parent">
 
             <TextView
-                android:id="@+id/am_i_group_owner_question_text_view"
+                android:id="@+id/am_i_host_question_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="bottom" />
 
             <TextView
-                android:id="@+id/group_owner_ip_text_view"
+                android:id="@+id/host_ip_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

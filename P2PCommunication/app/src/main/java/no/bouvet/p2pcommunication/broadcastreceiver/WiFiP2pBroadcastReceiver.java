@@ -29,7 +29,7 @@ import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 
 public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
-    public static final String TAG = "WiFiP2pBroadcastReceiver";
+    public static final String TAG = WifiP2pBroadcastReceiver.class.getSimpleName();
     private WifiP2pListener wifiP2pListener;
     private final Context context;
 
@@ -60,16 +60,16 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
         int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
             wifiP2pListener.onWifiP2pStateEnabled();
-            Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
+            Log.i(TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
         } else {
             wifiP2pListener.onWifiP2pStateDisabled();
-            Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
+            Log.i(TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
         }
     }
 
     private void notifyPeersChanged() {
         wifiP2pListener.onRequestPeers();
-        Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
+        Log.i(TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
     }
 
     private NetworkInfo getNetworkInfo(Intent intent) {
@@ -79,17 +79,17 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
     private void notifyConnectionStateChanged(NetworkInfo networkInfo) {
         if (networkInfo.isConnected()) {
             wifiP2pListener.onRequestConnectionInfo();
-            Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.connected_to_p2p_network));
+            Log.i(TAG, context.getString(R.string.connected_to_p2p_network));
         } else {
-            wifiP2pListener.onClearDiscoveredPeers();
-            Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.disconnected_from_p2p_network));
+            wifiP2pListener.onResetData();
+            Log.i(TAG, context.getString(R.string.disconnected_from_p2p_network));
         }
     }
 
     private void notifyThisDeviceChanged(Intent intent) {
         WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
         wifiP2pListener.onThisDeviceChanged(wifiP2pDevice);
-        Log.i(WifiP2pBroadcastReceiver.TAG, context.getString(R.string.details_about_this_device_updated));
+        Log.i(TAG, context.getString(R.string.details_about_this_device_updated));
     }
 
 

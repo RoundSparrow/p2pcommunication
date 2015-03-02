@@ -5,12 +5,12 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListener {
 
+    private static final String TAG = WifiP2pConnectActionListener.class.getSimpleName();
     private final Context context;
 
     public WifiP2pConnectActionListener(Context context) {
@@ -19,8 +19,7 @@ public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListen
 
     @Override
     public void onSuccess() {
-        Toast.makeText(context, context.getString(R.string.invitation_sent), Toast.LENGTH_SHORT).show();
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.invitation_sent));
+        Log.i(TAG, context.getString(R.string.invitation_sent));
     }
 
     @Override
@@ -28,6 +27,6 @@ public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListen
         String reason = context.getString(R.string.connect_failed) + ": ";
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
-        Log.w(P2PCommunicationActivity.TAG, reason);
+        Log.w(TAG, reason);
     }
 }

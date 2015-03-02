@@ -5,13 +5,13 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.util.Log;
 import android.widget.Toast;
 
-import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class WifiP2pStartPeerDiscoveryActionListener implements ActionListener {
 
+    private static final String TAG = WifiP2pStartPeerDiscoveryActionListener.class.getSimpleName();
     private final Context context;
     private DiscoveryStateListener discoveryStateListener;
 
@@ -23,8 +23,7 @@ public class WifiP2pStartPeerDiscoveryActionListener implements ActionListener {
     @Override
     public void onSuccess() {
         discoveryStateListener.onStartedDiscovery();
-        Toast.makeText(context, context.getString(R.string.discovery_started), Toast.LENGTH_SHORT).show();
-        Log.i(P2PCommunicationActivity.TAG, context.getString(R.string.discovery_started));
+        Log.i(TAG, context.getString(R.string.discovery_started));
     }
 
     @Override
@@ -32,7 +31,7 @@ public class WifiP2pStartPeerDiscoveryActionListener implements ActionListener {
         String reason = context.getString(R.string.could_not_start_discovery) + ": ";
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
-        Log.w(P2PCommunicationActivity.TAG, reason);
+        Log.w(TAG, reason);
     }
 
 }

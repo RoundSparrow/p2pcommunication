@@ -21,27 +21,26 @@ import no.bouvet.p2pcommunication.R;
 
 public class MulticastMessageReceiverService extends IntentService {
 
-    public static final String TAG = "MulticastMessageReceiverService";
+    private static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
     public static final String ACTION_LISTEN_FOR_MULTICAST = "no.bouvet.p2pcommunication.multicast.action.ACTION_LISTEN_FOR_MULTICAST";
     public static final String EXTRA_MESSENGER = "no.bouvet.p2pcommunication.multicast.extra.EXTRA_MESSENGER";
-    private boolean shouldBeRunning = false;
+    public static boolean running = false;
 
     public MulticastMessageReceiverService() {
-        super("MulticastListenerIntentService");
+        super(MulticastMessageReceiverService.class.getSimpleName());
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         final String action = intent.getAction();
         if (action.equals(ACTION_LISTEN_FOR_MULTICAST)) {
             try {
-                shouldBeRunning = true;
+                running = true;
                 Messenger messenger = getMessenger(intent);
                 MulticastSocket multicastSocket = createMulticastSocket();
                 byte[] buffer = new byte[1024];
                 Log.i(TAG, getString(R.string.started_listening_for_multicast_messages));
-                while (shouldBeRunning) {
+                while (running) {
                     DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                     multicastSocket.receive(datagramPacket);
                     String receivedMessage = new String(buffer, 0, datagramPacket.getLength());
@@ -58,7 +57,7 @@ public class MulticastMessageReceiverService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        shouldBeRunning = false;
+        running = false;
         Log.i(TAG, getString(R.string.stopped_listening_for_multicast_messages));
     }
 

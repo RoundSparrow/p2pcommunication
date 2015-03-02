@@ -17,17 +17,11 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private Context context;
     private List<WifiP2pDevice> deviceList;
-    private boolean showCheckBox;
 
     public DiscoveredDevicesListAdapter(Context context, int resource, List<WifiP2pDevice> deviceList) {
         super(context, resource, deviceList);
         this.context = context;
         this.deviceList = deviceList;
-        showCheckBox = false;
-    }
-
-    public void setShowCheckBox(boolean showCheckBox) {
-        this.showCheckBox = showCheckBox;
     }
 
     static class ViewHolder {
@@ -37,7 +31,7 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
 
@@ -53,10 +47,6 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
         final WifiP2pDevice wifiP2pDevice = deviceList.get(position);
         viewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
         viewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
-
-        if (showCheckBox) {
-            viewHolder.checkBox.setVisibility(View.VISIBLE);
-        }
 
         return convertView;
     }

@@ -53,8 +53,10 @@ public class CommunicationFragment extends Fragment implements MulticastListener
 
     @Override
     public void onStartReceivingMulticastMessages() {
-        multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
-        getActivity().startService(multicastReceiverServiceIntent);
+        if (!MulticastMessageReceiverService.running) {
+            multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
+            getActivity().startService(multicastReceiverServiceIntent);
+        }
     }
 
     @Override
