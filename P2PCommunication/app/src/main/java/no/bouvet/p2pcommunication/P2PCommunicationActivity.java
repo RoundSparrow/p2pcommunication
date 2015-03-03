@@ -3,6 +3,7 @@ package no.bouvet.p2pcommunication;
 
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
@@ -77,7 +78,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
             DiscoveryStateListener discoveryStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
             p2pCommunicationWifiP2pManager.startPeerDiscovery(discoveryStateListener);
         } else {
-            Toast.makeText(this, R.string.p2p_disabled_please_activate, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.wifi_p2p_disabled_please_activate, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -140,7 +141,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     private void createAndAcquireMulticastLock() {
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
         if (wifiManager != null) {
-            WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock(TAG);
+            MulticastLock multicastLock = wifiManager.createMulticastLock(TAG);
             multicastLock.acquire();
         }
     }
