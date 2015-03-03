@@ -27,13 +27,13 @@ import android.util.Log;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 
-public class WiFiP2pBroadcastReceiver2 extends BroadcastReceiver {
+public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
-    public static final String TAG = WiFiP2pBroadcastReceiver2.class.getSimpleName();
+    public static final String TAG = WifiP2pBroadcastReceiver.class.getSimpleName();
     private final Context context;
     private WifiP2pListener wifiP2pListener;
 
-    public WiFiP2pBroadcastReceiver2(Context context, WifiP2pListener wifiP2pListener) {
+    public WifiP2pBroadcastReceiver(Context context, WifiP2pListener wifiP2pListener) {
         this.context = context;
         this.wifiP2pListener = wifiP2pListener;
     }

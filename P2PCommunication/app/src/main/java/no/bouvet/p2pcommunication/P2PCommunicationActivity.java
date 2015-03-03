@@ -18,7 +18,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
-import no.bouvet.p2pcommunication.broadcastreceiver.WiFiP2pBroadcastReceiver2;
+import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
@@ -29,7 +29,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
 
     public static final String TAG = P2PCommunicationActivity.class.getSimpleName();
     private P2pCommunicationWifiP2pManager p2pCommunicationWifiP2pManager;
-    private WiFiP2pBroadcastReceiver2 wiFiP2pBroadcastReceiver2;
+    private WifiP2pBroadcastReceiver wifiP2pBroadcastReceiver;
     private P2pCommunicationFragmentPagerAdapter p2pCommunicationFragmentPagerAdapter;
     private boolean wifiP2pEnabled;
 
@@ -45,7 +45,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
         ButterKnife.inject(this);
         createAndAcquireMulticastLock();
         p2pCommunicationWifiP2pManager = new P2pCommunicationWifiP2pManager(getApplicationContext());
-        wiFiP2pBroadcastReceiver2 = new WiFiP2pBroadcastReceiver2(getApplicationContext(), this);
+        wifiP2pBroadcastReceiver = new WifiP2pBroadcastReceiver(getApplicationContext(), this);
         p2pCommunicationFragmentPagerAdapter = new P2pCommunicationFragmentPagerAdapter(getSupportFragmentManager());
         setViewPager(viewPager, p2pCommunicationFragmentPagerAdapter);
     }
@@ -53,13 +53,13 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver(wiFiP2pBroadcastReceiver2, createWifiP2pIntentFilter());
+        registerReceiver(wifiP2pBroadcastReceiver, createWifiP2pIntentFilter());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(wiFiP2pBroadcastReceiver2);
+        unregisterReceiver(wifiP2pBroadcastReceiver);
     }
 
     @Override
