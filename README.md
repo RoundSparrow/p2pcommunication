@@ -12,7 +12,7 @@ If you encounter problems, see "troubleshooting" section below.
 - Install Android Studio Bundle
 - Set up Android SDK with [Android Support Library](https://developer.android.com/tools/support-library/setup.html)
 - Install Git
-- Check out the project from GitHub repository (https://github.com/bouvet-bergen/p2pcommunication.git)
+- Check out the project from GitHub repository
 
 ### Troubleshooting
 - Android Virtual Devices does not support WiFi P2P so you have to test the app on a physical device.
