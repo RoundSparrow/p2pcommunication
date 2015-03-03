@@ -6,28 +6,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
 
-public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
+public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private Context context;
     private List<WifiP2pDevice> deviceList;
 
-    public DiscoveredDevicesListAdapter(Context context, int resource, List<WifiP2pDevice> deviceList) {
+    public DiscoveryListAdapter(Context context, int resource, List<WifiP2pDevice> deviceList) {
         super(context, resource, deviceList);
         this.context = context;
         this.deviceList = deviceList;
     }
 
     static class ViewHolder {
-        protected TextView deviceNameTextView;
-        protected TextView deviceStatusTextView;
-        protected CheckBox checkBox;
+        @InjectView(R.id.discovered_device_name_text_view) protected TextView deviceNameTextView;
+        @InjectView(R.id.discovered_device_status_text_view) protected TextView deviceStatusTextView;
+
+        ViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
     }
 
     @Override
@@ -38,7 +42,7 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.discovery_and_connection_list_row, null);
-            viewHolder = createViewHolderAndFindViews(convertView);
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -49,14 +53,6 @@ public class DiscoveredDevicesListAdapter extends ArrayAdapter<WifiP2pDevice> {
         viewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
 
         return convertView;
-    }
-
-    private ViewHolder createViewHolderAndFindViews(View convertView) {
-        ViewHolder viewHolder = new ViewHolder();
-        viewHolder.deviceNameTextView = (TextView) convertView.findViewById(R.id.discovered_device_name_text_view);
-        viewHolder.deviceStatusTextView = (TextView) convertView.findViewById(R.id.discovered_device_status_text_view);
-        viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
-        return viewHolder;
     }
 
     private String getDeviceStatus(int deviceStatus) {

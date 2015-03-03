@@ -65,5 +65,6 @@
     <string name="space" />
     <string name="my_ip">MyIP</string>
     <string name="ip_capital_letters">IP</string>
+    <string name="wifi_p2p_disabled_please_activate">Wifi P2P is disabled, please activate from system settings</string>
 
 </resources>

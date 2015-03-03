@@ -30,8 +30,8 @@ import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = WifiP2pBroadcastReceiver.class.getSimpleName();
-    private WifiP2pListener wifiP2pListener;
     private final Context context;
+    private WifiP2pListener wifiP2pListener;
 
     public WifiP2pBroadcastReceiver(Context context, WifiP2pListener wifiP2pListener) {
         this.context = context;
