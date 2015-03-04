@@ -22,16 +22,14 @@ import no.bouvet.p2pcommunication.multicast.UserInputHandler;
 
 public class CommunicationFragment extends Fragment implements MulticastListener, MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
 
-    private static CommunicationFragment communicationFragment;
+    public static final String TAG = CommunicationFragment.class.getSimpleName();
     private View communicationFragmentView;
     private TextView multicastMessageLogTextView;
     private EditText userInputEditText;
     private Intent multicastReceiverServiceIntent;
 
-    public static Fragment getInstance() {
-        if (communicationFragment == null) {
-            communicationFragment = new CommunicationFragment();
-        }
+    public static Fragment newInstance() {
+        CommunicationFragment communicationFragment = new CommunicationFragment();
         return communicationFragment;
     }
 

@@ -35,15 +35,12 @@ import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
 
 public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, ConnectionInfoListener {
 
-    private static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
-    private static DiscoveryAndConnectionFragment discoveryAndConnectionFragment;
+    public static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
     private View discoveryAndConnectionFragmentView;
     private List<WifiP2pDevice> discoveredWifiP2pDevices;
 
-    public static Fragment getInstance() {
-        if (discoveryAndConnectionFragment == null) {
-            discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
-        }
+    public static Fragment newInstance() {
+        DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
         return discoveryAndConnectionFragment;
     }
 

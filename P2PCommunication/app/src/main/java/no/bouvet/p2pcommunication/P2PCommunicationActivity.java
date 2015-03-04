@@ -9,16 +9,22 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
+import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
+import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
@@ -46,7 +52,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
         createAndAcquireMulticastLock();
         p2pCommunicationWifiP2pManager = new P2pCommunicationWifiP2pManager(getApplicationContext());
         wifiP2pBroadcastReceiver = new WifiP2pBroadcastReceiver(getApplicationContext(), this);
-        p2pCommunicationFragmentPagerAdapter = new P2pCommunicationFragmentPagerAdapter(getSupportFragmentManager());
+        p2pCommunicationFragmentPagerAdapter = new P2pCommunicationFragmentPagerAdapter(getSupportFragmentManager(), getFragmentList());
         setViewPager(viewPager, p2pCommunicationFragmentPagerAdapter);
     }
 
@@ -175,5 +181,12 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
             default:
                 return getString(R.string.unknown);
         }
+    }
+
+    private List<Fragment> getFragmentList() {
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(DiscoveryAndConnectionFragment.newInstance());
+        fragmentList.add(CommunicationFragment.newInstance());
+        return fragmentList;
     }
 }

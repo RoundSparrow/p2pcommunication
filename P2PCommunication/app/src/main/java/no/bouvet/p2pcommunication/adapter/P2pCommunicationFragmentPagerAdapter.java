@@ -4,32 +4,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.List;
+
 import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
 import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 
 public class P2pCommunicationFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int FRAGMENT_COUNT = 2;
+    private List<Fragment> fragmentList;
 
-    public P2pCommunicationFragmentPagerAdapter(FragmentManager fragmentManager) {
+    public P2pCommunicationFragmentPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
         super(fragmentManager);
+        this.fragmentList = fragmentList;
     }
 
     @Override
     public Fragment getItem(int i) {
-        switch (i) {
-            case 0:
-                return DiscoveryAndConnectionFragment.getInstance();
-            case 1:
-                return CommunicationFragment.getInstance();
-            default:
-                return null;
-        }
+        return fragmentList.get(i);
     }
 
     @Override
     public int getCount() {
-        return FRAGMENT_COUNT;
+        return fragmentList.size();
     }
 
     public DiscoveryAndConnectionFragment getDiscoveryAndConnectionFragment() {
