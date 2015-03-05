@@ -19,9 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.DiscoveryListAdapter;
@@ -37,7 +34,8 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
 
     public static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
     private View discoveryAndConnectionFragmentView;
-    private List<WifiP2pDevice> discoveredWifiP2pDevices;
+    private DiscoveryListAdapter discoveryListAdapter;
+    private boolean activityCreated;
 
     public static Fragment newInstance() {
         DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
@@ -54,10 +52,11 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        discoveredWifiP2pDevices = new ArrayList<>();
-        setListAdapter(new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_list_row, discoveredWifiP2pDevices));
+        discoveryListAdapter = new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_list_row);
+        setListAdapter(discoveryListAdapter);
         updateButton(R.id.left_bottom_button, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(((WifiP2pListener) getActivity())));
-        updateButton(R.id.right_bottom_button, getString(R.string.multi_connect), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
+        updateButton(R.id.right_bottom_button, getString(R.string.create_group), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
+        activityCreated = true;
     }
 
     @Override
@@ -69,7 +68,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
 
     @Override
     public void onStartedDiscovery() {
-        ((DiscoveryListAdapter) getListAdapter()).clear();
+        clearDiscoveryList();
         updateSearchLayoutVisibility(View.VISIBLE);
         updateButton(R.id.left_bottom_button, getString(R.string.stop), new WifiP2pStopDiscoveryOnClickListener(((WifiP2pListener) getActivity())));
     }
@@ -82,11 +81,11 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        discoveredWifiP2pDevices.clear();
-        discoveredWifiP2pDevices.addAll(peerList.getDeviceList());
-        ((DiscoveryListAdapter) getListAdapter()).notifyDataSetChanged();
+        discoveryListAdapter.clear();
+        discoveryListAdapter.addAll(peerList.getDeviceList());
+        discoveryListAdapter.notifyDataSetChanged();
         updateTextViewVisibility(R.id.no_devices_found_text_view, View.GONE);
-        if (discoveredWifiP2pDevices.size() == 0) {
+        if (discoveryListAdapter.isEmpty()) {
             updateTextViewVisibility(R.id.no_devices_found_text_view, View.VISIBLE);
             Log.i(P2PCommunicationActivity.TAG, getString(R.string.no_devices_found));
         }
@@ -101,15 +100,17 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     }
 
     public void resetData() {
-        if (discoveredWifiP2pDevices != null) {
-            discoveredWifiP2pDevices.clear();
-            ((DiscoveryListAdapter) getListAdapter()).notifyDataSetChanged();
-            ((MulticastListener) getActivity()).onStopReceivingMulticastMessages();
+        if (activityCreated) {
             updateGroupHostInfo(null);
             updateButton(R.id.right_bottom_button, getString(R.string.multi_connect), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
-            Log.i(TAG, getString(R.string.discovered_devices_list_cleared));
+            ((MulticastListener) getActivity()).onStopReceivingMulticastMessages();
+            Log.i(TAG, getString(R.string.data_has_been_reset));
         }
+    }
 
+    private void clearDiscoveryList() {
+        discoveryListAdapter.clear();
+        discoveryListAdapter.notifyDataSetChanged();
     }
 
     private void updateGroupHostInfo(WifiP2pInfo wifiP2pInfo) {

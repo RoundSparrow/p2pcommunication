@@ -6,51 +6,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
 
 public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private Context context;
-    private List<WifiP2pDevice> deviceList;
 
-    public DiscoveryListAdapter(Context context, int resource, List<WifiP2pDevice> deviceList) {
-        super(context, resource, deviceList);
+    public DiscoveryListAdapter(Context context, int resource) {
+        super(context, resource);
         this.context = context;
-        this.deviceList = deviceList;
     }
 
-    static class ViewHolder {
-        @InjectView(R.id.discovered_device_name_text_view) protected TextView deviceNameTextView;
-        @InjectView(R.id.discovered_device_status_text_view) protected TextView deviceStatusTextView;
-
-        ViewHolder(View view) {
-            ButterKnife.inject(this, view);
-        }
-    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ViewHolder viewHolder;
+        DiscoveryListAdapterViewHolder discoveryListAdapterViewHolder;
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.discovery_and_connection_list_row, null);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
+            discoveryListAdapterViewHolder = new DiscoveryListAdapterViewHolder(convertView);
+            convertView.setTag(discoveryListAdapterViewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            discoveryListAdapterViewHolder = (DiscoveryListAdapterViewHolder) convertView.getTag();
         }
 
-        final WifiP2pDevice wifiP2pDevice = deviceList.get(position);
-        viewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
-        viewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
+        final WifiP2pDevice wifiP2pDevice = getItem(position);
+        discoveryListAdapterViewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
+        discoveryListAdapterViewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
 
         return convertView;
     }
