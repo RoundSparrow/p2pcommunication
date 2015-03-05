@@ -81,7 +81,7 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
             wifiP2pListener.onRequestConnectionInfo();
             Log.i(TAG, context.getString(R.string.is_connected));
         } else {
-            wifiP2pListener.onResetData();
+            wifiP2pListener.onIsDisconnected();
             Log.i(TAG, context.getString(R.string.is_disconnected));
         }
     }

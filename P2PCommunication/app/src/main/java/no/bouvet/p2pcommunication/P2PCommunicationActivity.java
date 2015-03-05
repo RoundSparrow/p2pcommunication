@@ -28,6 +28,7 @@ import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
+import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
 import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
@@ -101,22 +102,25 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     }
 
     @Override
-    public void onResetData() {
-        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().resetData();
-    }
-
-    @Override
     public void onConnect(WifiP2pDevice wifiP2pDevice) {
-        p2pCommunicationWifiP2pManager.connectToWifiP2pDevice(wifiP2pDevice);
+        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.connect(wifiP2pDevice, connectionStateListener);
     }
 
     @Override
     public void onDisconnect() {
-        p2pCommunicationWifiP2pManager.disconnectFromWifiP2pNetwork();
+        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.disconnect(connectionStateListener);
     }
 
     @Override
-    public void onMultiConnect() {
+    public void onIsDisconnected() {
+        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        connectionStateListener.onIsDisconnected();
+    }
+
+    @Override
+    public void onCreateGroup() {
         p2pCommunicationWifiP2pManager.createGroup();
     }
 
@@ -130,6 +134,11 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     public void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice) {
         myDeviceNameTextView.setText(wifiP2pDevice.deviceName);
         myDeviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
+    }
+
+    @Override
+    public void onCancelConnect() {
+        p2pCommunicationWifiP2pManager.cancelConnect();
     }
 
     @Override

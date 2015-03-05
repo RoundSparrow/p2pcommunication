@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Messenger;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class CommunicationFragment extends Fragment implements MulticastListener
         if (!MulticastMessageReceiverService.running) {
             multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
             getActivity().startService(multicastReceiverServiceIntent);
+            Log.i(TAG, getString(R.string.multicast_receiver_service_started));
         }
     }
 
@@ -61,6 +63,7 @@ public class CommunicationFragment extends Fragment implements MulticastListener
     public void onStopReceivingMulticastMessages() {
         if (multicastReceiverServiceIntent != null) {
             getActivity().stopService(multicastReceiverServiceIntent);
+            Log.i(TAG, getString(R.string.multicast_receiver_service_stopped));
         }
     }
 

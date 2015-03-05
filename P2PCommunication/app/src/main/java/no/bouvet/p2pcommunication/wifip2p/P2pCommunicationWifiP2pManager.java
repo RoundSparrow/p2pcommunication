@@ -9,7 +9,9 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 
 import no.bouvet.p2pcommunication.R;
+import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
 import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pCancelConnectActionListener;
 import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pConnectActionListener;
 import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pCreateGroupActionListener;
 import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pDisconnectActionListener;
@@ -40,12 +42,12 @@ public class P2pCommunicationWifiP2pManager {
         wifiP2pManager.requestPeers(wifiP2pChannel, peerListListener);
     }
 
-    public void connectToWifiP2pDevice(WifiP2pDevice wifiP2pDevice) {
-        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(context));
+    public void connect(WifiP2pDevice wifiP2pDevice, ConnectionStateListener connectionStateListener) {
+        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(context, connectionStateListener));
     }
 
-    public void disconnectFromWifiP2pNetwork() {
-        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(context));
+    public void disconnect(ConnectionStateListener connectionStateListener) {
+        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(context, connectionStateListener));
     }
 
     public void createGroup() {
@@ -54,6 +56,10 @@ public class P2pCommunicationWifiP2pManager {
 
     public void requestConnectionInfo(ConnectionInfoListener connectionInfoListener) {
         wifiP2pManager.requestConnectionInfo(wifiP2pChannel, connectionInfoListener);
+    }
+
+    public void cancelConnect() {
+        wifiP2pManager.cancelConnect(wifiP2pChannel, new WifiP2pCancelConnectActionListener(context));
     }
 
     public static String getFailureReason(Context context, int reasonCode) {

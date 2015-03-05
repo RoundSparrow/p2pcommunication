@@ -19,18 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import no.bouvet.p2pcommunication.P2PCommunicationActivity;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.DiscoveryListAdapter;
 import no.bouvet.p2pcommunication.listener.WifiP2pListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
+import no.bouvet.p2pcommunication.listener.onclick.WifiP2pCancelInvitationOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pDisconnectOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pMultiConnectOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStartDiscoveryOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStopDiscoveryOnClickListener;
+import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
 import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
 
-public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, ConnectionInfoListener {
+public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, ConnectionStateListener, ConnectionInfoListener {
 
     public static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
     private View discoveryAndConnectionFragmentView;
@@ -87,7 +88,21 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         updateTextViewVisibility(R.id.no_devices_found_text_view, View.GONE);
         if (discoveryListAdapter.isEmpty()) {
             updateTextViewVisibility(R.id.no_devices_found_text_view, View.VISIBLE);
-            Log.i(P2PCommunicationActivity.TAG, getString(R.string.no_devices_found));
+        }
+    }
+
+    @Override
+    public void onInvitationToConnectSent() {
+        updateButton(R.id.right_bottom_button, getString(R.string.cancel_invitation), new WifiP2pCancelInvitationOnClickListener(((WifiP2pListener) getActivity())));
+    }
+
+    @Override
+    public void onIsDisconnected() {
+        if (activityCreated) {
+            updateGroupHostInfo(null);
+            updateButton(R.id.right_bottom_button, getString(R.string.create_group), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
+            ((MulticastListener) getActivity()).onStopReceivingMulticastMessages();
+            Log.i(TAG, getString(R.string.data_has_been_reset));
         }
     }
 
@@ -97,15 +112,6 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         ((WifiP2pListener) getActivity()).onStopPeerDiscovery();
         updateGroupHostInfo(wifiP2pInfo);
         updateButton(R.id.right_bottom_button, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(((WifiP2pListener) getActivity())));
-    }
-
-    public void resetData() {
-        if (activityCreated) {
-            updateGroupHostInfo(null);
-            updateButton(R.id.right_bottom_button, getString(R.string.create_group), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
-            ((MulticastListener) getActivity()).onStopReceivingMulticastMessages();
-            Log.i(TAG, getString(R.string.data_has_been_reset));
-        }
     }
 
     private void clearDiscoveryList() {
@@ -146,6 +152,5 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         LinearLayout searchLayout = (LinearLayout) discoveryAndConnectionFragmentView.findViewById(R.id.search_layout);
         searchLayout.setVisibility(visibility);
     }
-
 
 }

@@ -14,15 +14,18 @@ public interface WifiP2pListener {
 
     void onRequestPeers();
 
-    void onResetData();
-
     void onConnect(WifiP2pDevice wifiP2pDevice);
+
+    void onCancelConnect();
 
     void onDisconnect();
 
-    void onMultiConnect();
+    void onIsDisconnected();
+
+    void onCreateGroup();
 
     void onRequestConnectionInfo();
 
     void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice);
+
 }
