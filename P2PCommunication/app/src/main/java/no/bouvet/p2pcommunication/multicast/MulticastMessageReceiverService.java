@@ -17,8 +17,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import no.bouvet.p2pcommunication.R;
-
 public class MulticastMessageReceiverService extends IntentService {
 
     private static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
@@ -39,7 +37,6 @@ public class MulticastMessageReceiverService extends IntentService {
                 Messenger messenger = getMessenger(intent);
                 MulticastSocket multicastSocket = createMulticastSocket();
                 byte[] buffer = new byte[1024];
-                Log.i(TAG, getString(R.string.started_listening_for_multicast_messages));
                 while (running) {
                     DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                     multicastSocket.receive(datagramPacket);
@@ -57,7 +54,6 @@ public class MulticastMessageReceiverService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         running = false;
-        Log.i(TAG, getString(R.string.stopped_listening_for_multicast_messages));
     }
 
     private MulticastSocket createMulticastSocket() throws IOException {

@@ -76,5 +76,10 @@
     <string name="could_not_start_discovery">Could not start discovery</string>
     <string name="successfully_stopped_discovery">Successfully stopped discovery</string>
     <string name="could_not_stop_discovery">Could not stop discovery</string>
+    <string name="successfully_cancelled_connection">Successfully cancelled connection</string>
+    <string name="could_not_cancel_connection">Could not cancel connection</string>
+    <string name="cancel_invitation">Cancel invitation</string>
+    <string name="multicast_receiver_service_stopped">Multicast receiver service stopped</string>
+    <string name="multicast_receiver_service_started">Multicast receiver service started</string>
 
 </resources>

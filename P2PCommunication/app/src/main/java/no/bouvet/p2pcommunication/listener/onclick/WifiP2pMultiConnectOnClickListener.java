@@ -15,7 +15,7 @@ public class WifiP2pMultiConnectOnClickListener implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        wifiP2pListener.onMultiConnect();
+        wifiP2pListener.onCreateGroup();
     }
 
 }
