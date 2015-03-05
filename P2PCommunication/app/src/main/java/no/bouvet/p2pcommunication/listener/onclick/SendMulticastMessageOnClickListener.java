@@ -1,15 +1,17 @@
-package no.bouvet.p2pcommunication.multicast;
+package no.bouvet.p2pcommunication.listener.onclick;
 
 import android.view.View;
 
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.multicast.SendMulticastMessageAsyncTask;
+import no.bouvet.p2pcommunication.multicast.UserInputHandler;
 
-public class SendMulticastMessageButtonOnClickListener implements View.OnClickListener {
+public class SendMulticastMessageOnClickListener implements View.OnClickListener {
 
     private MulticastMessageSentListener multicastMessageSentListener;
     private UserInputHandler userInputHandler;
 
-    public SendMulticastMessageButtonOnClickListener(MulticastMessageSentListener multicastMessageSentListener, UserInputHandler userInputHandler) {
+    public SendMulticastMessageOnClickListener(MulticastMessageSentListener multicastMessageSentListener, UserInputHandler userInputHandler) {
         this.multicastMessageSentListener = multicastMessageSentListener;
         this.userInputHandler = userInputHandler;
     }
