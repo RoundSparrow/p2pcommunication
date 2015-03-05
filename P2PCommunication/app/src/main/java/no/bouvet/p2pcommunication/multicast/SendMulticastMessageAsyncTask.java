@@ -16,7 +16,7 @@ import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListene
 
 public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boolean> {
 
-    private static final String TAG = "SendMulticastMessageAsyncTask";
+    private static final String TAG = SendMulticastMessageAsyncTask.class.getSimpleName();
     private MulticastMessageSentListener multicastMessageSentListener;
     private UserInputHandler userInputHandler;
 

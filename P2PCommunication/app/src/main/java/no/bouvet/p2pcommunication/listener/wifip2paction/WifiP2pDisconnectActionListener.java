@@ -20,12 +20,12 @@ public class WifiP2pDisconnectActionListener implements WifiP2pManager.ActionLis
 
     @Override
     public void onSuccess() {
-
+        Log.i(TAG, context.getString(R.string.successfully_disconnected));
     }
 
     @Override
     public void onFailure(int reasonCode) {
-        String reason = context.getString(R.string.disconnect_failed) + ": ";
+        String reason = context.getString(R.string.could_not_disconnect) + ": ";
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
         Log.w(TAG, reason);

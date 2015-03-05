@@ -23,7 +23,7 @@ public class WifiP2pStopPeerDiscoveryActionListener implements ActionListener {
     @Override
     public void onSuccess() {
         discoveryStateListener.onStoppedDiscovery();
-        Log.i(TAG, context.getString(R.string.discovery_stopped));
+        Log.i(TAG, context.getString(R.string.successfully_stopped_discovery));
     }
 
     @Override

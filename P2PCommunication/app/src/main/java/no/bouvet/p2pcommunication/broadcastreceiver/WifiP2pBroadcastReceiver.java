@@ -69,7 +69,7 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
     private void notifyPeersChanged() {
         wifiP2pListener.onRequestPeers();
-        Log.i(TAG, context.getString(R.string.number_of_available_p2p_peers_changed));
+        Log.i(TAG, context.getString(R.string.peers_requested));
     }
 
     private NetworkInfo getNetworkInfo(Intent intent) {
@@ -79,17 +79,17 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
     private void notifyConnectionStateChanged(NetworkInfo networkInfo) {
         if (networkInfo.isConnected()) {
             wifiP2pListener.onRequestConnectionInfo();
-            Log.i(TAG, context.getString(R.string.connected_to_p2p_network));
+            Log.i(TAG, context.getString(R.string.is_connected));
         } else {
             wifiP2pListener.onResetData();
-            Log.i(TAG, context.getString(R.string.disconnected_from_p2p_network));
+            Log.i(TAG, context.getString(R.string.is_disconnected));
         }
     }
 
     private void notifyThisDeviceChanged(Intent intent) {
         WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
         wifiP2pListener.onThisDeviceChanged(wifiP2pDevice);
-        Log.i(TAG, context.getString(R.string.details_about_this_device_updated));
+        Log.i(TAG, context.getString(R.string.this_device_changed));
     }
 
 

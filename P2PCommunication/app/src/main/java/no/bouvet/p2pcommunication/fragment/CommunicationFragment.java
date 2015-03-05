@@ -17,7 +17,7 @@ import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedLis
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceivedHandler;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceiverService;
-import no.bouvet.p2pcommunication.multicast.SendMulticastMessageButtonOnClickListener;
+import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
 import no.bouvet.p2pcommunication.multicast.UserInputHandler;
 
 public class CommunicationFragment extends Fragment implements MulticastListener, MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
@@ -46,7 +46,7 @@ public class CommunicationFragment extends Fragment implements MulticastListener
         multicastMessageLogTextView = (TextView) communicationFragmentView.findViewById(R.id.multicast_message_log_text_view);
         userInputEditText = (EditText) communicationFragmentView.findViewById(R.id.user_input_edit_text);
         Button sendMulticastMessageButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_message_button);
-        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageButtonOnClickListener(this, this));
+        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
     }
 
     @Override

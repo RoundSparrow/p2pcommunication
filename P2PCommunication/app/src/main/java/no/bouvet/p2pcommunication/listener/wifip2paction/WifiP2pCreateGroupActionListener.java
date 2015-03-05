@@ -19,7 +19,7 @@ public class WifiP2pCreateGroupActionListener implements ActionListener {
 
     @Override
     public void onSuccess() {
-        Log.i(TAG, context.getString(R.string.group_created));
+        Log.i(TAG, context.getString(R.string.successfully_created_group));
     }
 
     @Override

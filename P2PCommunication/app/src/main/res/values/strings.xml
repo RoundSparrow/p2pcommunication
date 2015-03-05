@@ -52,14 +52,8 @@
     <string name="from">from</string>
     <string name="colon">:</string>
     <string name="multi_connect">Multi-connect</string>
-    <string name="group_created">Group created</string>
-    <string name="could_not_create_group">Could not create group</string>
     <string name="scan">Scan</string>
     <string name="stop">Stop</string>
-    <string name="discovery_stopped">Discovery stopped</string>
-    <string name="could_not_stop_discovery">Could not stop discovery</string>
-    <string name="could_not_start_discovery">Could not start discovery</string>
-    <string name="discovery_started">Discovery started</string>
     <string name="this_device_is_not_group_owner">This device is not the group owner</string>
     <string name="host">Host</string>
     <string name="space" />
@@ -68,5 +62,19 @@
     <string name="wifi_p2p_disabled_please_activate">Wifi P2P is disabled, please activate from system settings</string>
     <string name="create_group">Create group</string>
     <string name="data_has_been_reset">Data has been reset</string>
+    <string name="peers_requested">Peers requested</string>
+    <string name="is_connected">Is connected</string>
+    <string name="is_disconnected">Is disconnected</string>
+    <string name="this_device_changed">This device changed</string>
+    <string name="successfully_sent_invitation_to_connect">Successfully sent invitation to connect</string>
+    <string name="could_not_send_invitation_to_connect">Could not send invitation to connect</string>
+    <string name="successfully_created_group">Successfully created group</string>
+    <string name="could_not_create_group">Could not create group</string>
+    <string name="successfully_disconnected">Successfully disconnected</string>
+    <string name="could_not_disconnect">Could not disconnect</string>
+    <string name="successfully_started_discovery">Successfully started discovery</string>
+    <string name="could_not_start_discovery">Could not start discovery</string>
+    <string name="successfully_stopped_discovery">Successfully stopped discovery</string>
+    <string name="could_not_stop_discovery">Could not stop discovery</string>
 
 </resources>

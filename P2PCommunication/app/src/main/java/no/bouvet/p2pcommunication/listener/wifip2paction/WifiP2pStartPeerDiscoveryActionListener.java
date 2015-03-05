@@ -23,7 +23,7 @@ public class WifiP2pStartPeerDiscoveryActionListener implements ActionListener {
     @Override
     public void onSuccess() {
         discoveryStateListener.onStartedDiscovery();
-        Log.i(TAG, context.getString(R.string.discovery_started));
+        Log.i(TAG, context.getString(R.string.successfully_started_discovery));
     }
 
     @Override

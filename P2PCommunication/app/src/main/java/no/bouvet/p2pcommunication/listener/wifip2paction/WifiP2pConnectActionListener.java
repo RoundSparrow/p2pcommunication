@@ -19,12 +19,12 @@ public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListen
 
     @Override
     public void onSuccess() {
-        Log.i(TAG, context.getString(R.string.invitation_sent));
+        Log.i(TAG, context.getString(R.string.successfully_sent_invitation_to_connect));
     }
 
     @Override
     public void onFailure(int reasonCode) {
-        String reason = context.getString(R.string.connect_failed) + ": ";
+        String reason = context.getString(R.string.could_not_send_invitation_to_connect) + ": ";
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
         Log.w(TAG, reason);

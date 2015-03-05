@@ -102,7 +102,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public void resetData() {
         if (activityCreated) {
             updateGroupHostInfo(null);
-            updateButton(R.id.right_bottom_button, getString(R.string.multi_connect), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
+            updateButton(R.id.right_bottom_button, getString(R.string.create_group), new WifiP2pMultiConnectOnClickListener(((WifiP2pListener) getActivity())));
             ((MulticastListener) getActivity()).onStopReceivingMulticastMessages();
             Log.i(TAG, getString(R.string.data_has_been_reset));
         }

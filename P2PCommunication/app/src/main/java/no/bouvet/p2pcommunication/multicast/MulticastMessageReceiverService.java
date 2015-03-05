@@ -45,8 +45,7 @@ public class MulticastMessageReceiverService extends IntentService {
                     multicastSocket.receive(datagramPacket);
                     String receivedMessage = new String(buffer, 0, datagramPacket.getLength());
                     String senderIpAddress = datagramPacket.getAddress().getHostAddress();
-                    Message message = createMessage(receivedMessage, senderIpAddress);
-                    messenger.send(message);
+                    messenger.send(createMessage(receivedMessage, senderIpAddress));
                 }
             } catch (IOException | RemoteException e) {
                 Log.e(TAG, e.toString());
