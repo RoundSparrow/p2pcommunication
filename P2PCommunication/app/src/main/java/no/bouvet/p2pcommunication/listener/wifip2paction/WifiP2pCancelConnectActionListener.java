@@ -27,6 +27,6 @@ public class WifiP2pCancelConnectActionListener implements ActionListener {
         String reason = context.getString(R.string.could_not_cancel_connection) + ": ";
         reason += P2pCommunicationWifiP2pManager.getFailureReason(context, reasonCode);
         Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
-        Log.i(TAG, reason);
+        Log.w(TAG, reason);
     }
 }

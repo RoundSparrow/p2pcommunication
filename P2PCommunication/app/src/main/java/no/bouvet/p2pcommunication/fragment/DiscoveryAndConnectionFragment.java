@@ -63,7 +63,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-        WifiP2pDevice wifiP2pDevice = (WifiP2pDevice) getListAdapter().getItem(position);
+        WifiP2pDevice wifiP2pDevice = discoveryListAdapter.getItem(position);
         ((WifiP2pListener) getActivity()).onConnect(wifiP2pDevice);
     }
 
@@ -92,7 +92,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     }
 
     @Override
-    public void onInvitationToConnectSent() {
+    public void onSentInvitationToConnect() {
         updateButton(R.id.right_bottom_button, getString(R.string.cancel_invitation), new WifiP2pCancelInvitationOnClickListener(((WifiP2pListener) getActivity())));
     }
 

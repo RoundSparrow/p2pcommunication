@@ -22,7 +22,7 @@ public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListen
 
     @Override
     public void onSuccess() {
-        connectionStateListener.onInvitationToConnectSent();
+        connectionStateListener.onSentInvitationToConnect();
         Log.i(TAG, context.getString(R.string.successfully_sent_invitation_to_connect));
     }
 
