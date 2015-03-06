@@ -12,55 +12,51 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceivedHandler;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceiverService;
-import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
 import no.bouvet.p2pcommunication.multicast.UserInputHandler;
 
-public class CommunicationFragment extends Fragment implements MulticastListener, MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
+public class CommunicationFragment extends Fragment implements MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
 
     public static final String TAG = CommunicationFragment.class.getSimpleName();
-    private View communicationFragmentView;
-    private TextView multicastMessageLogTextView;
-    private EditText userInputEditText;
     private Intent multicastReceiverServiceIntent;
 
+    @InjectView(R.id.multicast_message_log_text_view) TextView multicastMessageLogTextView;
+    @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
+    @InjectView(R.id.send_button) Button sendButton;
+
     public static Fragment newInstance() {
-        CommunicationFragment communicationFragment = new CommunicationFragment();
-        return communicationFragment;
+        return new CommunicationFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        communicationFragmentView = inflater.inflate(R.layout.communication_fragment, null);
+        View communicationFragmentView = inflater.inflate(R.layout.communication_fragment, null);
+        ButterKnife.inject(this, communicationFragmentView);
         return communicationFragmentView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        multicastMessageLogTextView = (TextView) communicationFragmentView.findViewById(R.id.multicast_message_log_text_view);
-        userInputEditText = (EditText) communicationFragmentView.findViewById(R.id.user_input_edit_text);
-        Button sendMulticastMessageButton = (Button) communicationFragmentView.findViewById(R.id.send_multicast_message_button);
-        sendMulticastMessageButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
+        sendButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
     }
 
-    @Override
-    public void onStartReceivingMulticastMessages() {
-        if (!MulticastMessageReceiverService.running) {
+    public void startReceivingMulticastMessages() {
+        if (!MulticastMessageReceiverService.isRunning) {
             multicastReceiverServiceIntent = createMulticastReceiverServiceIntent();
             getActivity().startService(multicastReceiverServiceIntent);
             Log.i(TAG, getString(R.string.multicast_receiver_service_started));
         }
     }
 
-    @Override
-    public void onStopReceivingMulticastMessages() {
+    public void stopReceivingMulticastMessages() {
         if (multicastReceiverServiceIntent != null) {
             getActivity().stopService(multicastReceiverServiceIntent);
             Log.i(TAG, getString(R.string.multicast_receiver_service_stopped));
@@ -78,13 +74,18 @@ public class CommunicationFragment extends Fragment implements MulticastListener
     }
 
     @Override
-    public String getMulticastMessageToBeSentFromUserInput() {
+    public String getMessageToBeSentFromUserInput() {
         return userInputEditText.getText().toString();
     }
 
     @Override
     public void clearUserInput() {
         userInputEditText.setText("");
+    }
+
+    public void resetData() {
+        multicastMessageLogTextView.setText("");
+        stopReceivingMulticastMessages();
     }
 
     private Intent createMulticastReceiverServiceIntent() {
