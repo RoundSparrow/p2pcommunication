@@ -77,15 +77,15 @@ public class MulticastMessageReceiverService extends IntentService {
     }
 
     private NetworkInterface getNetworkInterface() throws SocketException {
-        return NetworkInterface.getByName(MulticastConnectionInfoHelper.NETWORK_INTERFACE_NAME);
+        return MulticastConnectionInfoHelper.getNetworkInterface();
     }
 
     private InetAddress getMulticastGroupAddress() throws UnknownHostException {
-        return InetAddress.getByName(MulticastConnectionInfoHelper.MULTICAST_GROUP_IP);
+        return MulticastConnectionInfoHelper.getMulticastGroupAddress();
     }
 
     private int getPort() {
-        return MulticastConnectionInfoHelper.MULTICAST_PORT;
+        return MulticastConnectionInfoHelper.getPort();
     }
 
 }
