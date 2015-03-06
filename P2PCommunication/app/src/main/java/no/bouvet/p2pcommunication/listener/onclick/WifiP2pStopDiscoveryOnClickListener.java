@@ -3,7 +3,7 @@ package no.bouvet.p2pcommunication.listener.onclick;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import no.bouvet.p2pcommunication.listener.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 
 public class WifiP2pStopDiscoveryOnClickListener implements OnClickListener {
 

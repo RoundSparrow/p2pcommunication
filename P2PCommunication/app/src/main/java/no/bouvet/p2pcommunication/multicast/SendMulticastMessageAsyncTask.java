@@ -16,7 +16,7 @@ import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListene
 
 public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boolean> {
 
-    private static final String TAG = SendMulticastMessageAsyncTask.class.getSimpleName();
+    public static final String TAG = SendMulticastMessageAsyncTask.class.getSimpleName();
     private MulticastMessageSentListener multicastMessageSentListener;
     private UserInputHandler userInputHandler;
 
@@ -31,7 +31,7 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
         boolean success = false;
         try {
             MulticastSocket multicastSocket = createMulticastSocket();
-            String multicastMessage = userInputHandler.getMulticastMessageToBeSentFromUserInput();
+            String multicastMessage = userInputHandler.getMessageToBeSentFromUserInput();
             DatagramPacket datagramPacket = new DatagramPacket(multicastMessage.getBytes(), multicastMessage.length(), getMulticastGroupAddress(), getPort());
             multicastSocket.send(datagramPacket);
             success = true;

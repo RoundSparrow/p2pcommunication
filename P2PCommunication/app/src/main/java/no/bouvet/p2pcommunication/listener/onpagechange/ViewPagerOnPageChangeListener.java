@@ -1,8 +1,9 @@
 package no.bouvet.p2pcommunication.listener.onpagechange;
 
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
-public class ViewPagerOnPageChangeListener implements ViewPager.OnPageChangeListener {
+public class ViewPagerOnPageChangeListener implements OnPageChangeListener {
 
     private ViewPager viewPager;
 
@@ -10,10 +11,8 @@ public class ViewPagerOnPageChangeListener implements ViewPager.OnPageChangeList
         this.viewPager = viewPager;
     }
 
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -23,6 +22,5 @@ public class ViewPagerOnPageChangeListener implements ViewPager.OnPageChangeList
 
     @Override
     public void onPageScrollStateChanged(int position) {
-
     }
 }

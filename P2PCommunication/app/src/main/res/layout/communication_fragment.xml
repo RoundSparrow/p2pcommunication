@@ -38,7 +38,7 @@
             android:ems="10" />
 
         <Button
-            android:id="@+id/send_multicast_message_button"
+            android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/send" />

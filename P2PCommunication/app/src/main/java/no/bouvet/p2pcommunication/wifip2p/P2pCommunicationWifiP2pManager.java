@@ -9,14 +9,14 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
-import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pCancelConnectActionListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pConnectActionListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pCreateGroupActionListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pDisconnectActionListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pStartPeerDiscoveryActionListener;
-import no.bouvet.p2pcommunication.listener.wifip2paction.WifiP2pStopPeerDiscoveryActionListener;
+import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
+import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pCancelConnectActionListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pConnectActionListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pCreateGroupActionListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pDisconnectActionListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pStartPeerDiscoveryActionListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.action.WifiP2pStopPeerDiscoveryActionListener;
 
 public class P2pCommunicationWifiP2pManager {
 
@@ -42,12 +42,12 @@ public class P2pCommunicationWifiP2pManager {
         wifiP2pManager.requestPeers(wifiP2pChannel, peerListListener);
     }
 
-    public void connect(WifiP2pDevice wifiP2pDevice, ConnectionStateListener connectionStateListener) {
-        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(context, connectionStateListener));
+    public void connect(WifiP2pDevice wifiP2pDevice, InvitationToConnectListener invitationToConnectListener) {
+        wifiP2pManager.connect(wifiP2pChannel, createWifiP2pConfig(wifiP2pDevice), new WifiP2pConnectActionListener(context, invitationToConnectListener));
     }
 
-    public void disconnect(ConnectionStateListener connectionStateListener) {
-        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(context, connectionStateListener));
+    public void disconnect() {
+        wifiP2pManager.removeGroup(wifiP2pChannel, new WifiP2pDisconnectActionListener(context));
     }
 
     public void createGroup() {
@@ -69,7 +69,7 @@ public class P2pCommunicationWifiP2pManager {
             case WifiP2pManager.ERROR:
                 return context.getString(R.string.internal_error);
             case WifiP2pManager.P2P_UNSUPPORTED:
-                return context.getString(R.string.p2p_unsupported);
+                return context.getString(R.string.wifi_p2p_unsupported);
             default:
                 return context.getString(R.string.unknown_error);
         }

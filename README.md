@@ -20,7 +20,7 @@ If you encounter problems, see "troubleshooting" section below.
 - [Android Studio cannot find JDK](https://github.com/bouvet-bergen/p2pcommunication/wiki/Set-JAVA_HOME-environment-variable)
 - Android Virtual Devices has limited support for WiFi Direct so testing the app on a physical device is recommended.
 - WiFi Direct is buggy on devices running older Android-versions than 4.2 Jelly Bean. [Issue tracker](https://code.google.com/p/android/issues/detail?id=43004)
-- ["Message not multicasted" when trying to send multicast messages]() (Log: networkInterface == null)
+- ["Message not multicasted" when trying to send messages](https://github.com/bouvet-bergen/p2pcommunication/wiki/Message-not-multicasted)
 
 ### FAQ
 - Minimum SDK version: 16

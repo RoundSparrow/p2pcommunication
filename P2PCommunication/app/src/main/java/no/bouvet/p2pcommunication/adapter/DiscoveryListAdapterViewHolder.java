@@ -9,8 +9,8 @@ import no.bouvet.p2pcommunication.R;
 
 public class DiscoveryListAdapterViewHolder {
 
-    @InjectView(R.id.discovered_device_name_text_view) protected TextView deviceNameTextView;
-    @InjectView(R.id.discovered_device_status_text_view) protected TextView deviceStatusTextView;
+    @InjectView(R.id.discovered_device_name_text_view) TextView deviceNameTextView;
+    @InjectView(R.id.discovered_device_status_text_view) TextView deviceStatusTextView;
 
     DiscoveryListAdapterViewHolder(View view) {
         ButterKnife.inject(this, view);

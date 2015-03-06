@@ -1,4 +1,4 @@
-package no.bouvet.p2pcommunication.listener.state;
+package no.bouvet.p2pcommunication.listener.discovery;
 
 public interface DiscoveryStateListener {
 

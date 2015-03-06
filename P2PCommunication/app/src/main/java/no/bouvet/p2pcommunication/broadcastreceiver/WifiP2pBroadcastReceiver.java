@@ -25,7 +25,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 
 public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
@@ -60,10 +60,10 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
         int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
             wifiP2pListener.onWifiP2pStateEnabled();
-            Log.i(TAG, context.getString(R.string.p2p_enabled) + " (" + state + ")");
+            Log.i(TAG, context.getString(R.string.wifi_p2p_enabled) + " (" + state + ")");
         } else {
             wifiP2pListener.onWifiP2pStateDisabled();
-            Log.i(TAG, context.getString(R.string.p2p_disabled) + " (" + state + ")");
+            Log.i(TAG, context.getString(R.string.wifi_p2p_disabled) + " (" + state + ")");
         }
     }
 

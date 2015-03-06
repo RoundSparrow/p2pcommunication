@@ -1,4 +1,4 @@
-package no.bouvet.p2pcommunication.listener.wifip2paction;
+package no.bouvet.p2pcommunication.listener.wifip2p.action;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -6,23 +6,23 @@ import android.util.Log;
 import android.widget.Toast;
 
 import no.bouvet.p2pcommunication.R;
-import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
+import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class WifiP2pConnectActionListener implements WifiP2pManager.ActionListener {
 
     private static final String TAG = WifiP2pConnectActionListener.class.getSimpleName();
     private Context context;
-    private ConnectionStateListener connectionStateListener;
+    private InvitationToConnectListener invitationToConnectListener;
 
-    public WifiP2pConnectActionListener(Context context, ConnectionStateListener connectionStateListener) {
+    public WifiP2pConnectActionListener(Context context, InvitationToConnectListener invitationToConnectListener) {
         this.context = context;
-        this.connectionStateListener = connectionStateListener;
+        this.invitationToConnectListener = invitationToConnectListener;
     }
 
     @Override
     public void onSuccess() {
-        connectionStateListener.onSentInvitationToConnect();
+        invitationToConnectListener.onSentInvitationToConnect();
         Log.i(TAG, context.getString(R.string.successfully_sent_invitation_to_connect));
     }
 

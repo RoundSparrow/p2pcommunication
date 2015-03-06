@@ -19,10 +19,10 @@ import java.net.UnknownHostException;
 
 public class MulticastMessageReceiverService extends IntentService {
 
-    private static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
+    public static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
     public static final String ACTION_LISTEN_FOR_MULTICAST = "no.bouvet.p2pcommunication.multicast.action.ACTION_LISTEN_FOR_MULTICAST";
     public static final String EXTRA_MESSENGER = "no.bouvet.p2pcommunication.multicast.extra.EXTRA_MESSENGER";
-    public static boolean running = false;
+    public static boolean isRunning = false;
 
     public MulticastMessageReceiverService() {
         super(MulticastMessageReceiverService.class.getSimpleName());
@@ -33,11 +33,11 @@ public class MulticastMessageReceiverService extends IntentService {
         final String action = intent.getAction();
         if (action.equals(ACTION_LISTEN_FOR_MULTICAST)) {
             try {
-                running = true;
+                isRunning = true;
                 Messenger messenger = getMessenger(intent);
                 MulticastSocket multicastSocket = createMulticastSocket();
                 byte[] buffer = new byte[1024];
-                while (running) {
+                while (isRunning) {
                     DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                     multicastSocket.receive(datagramPacket);
                     String receivedMessage = new String(buffer, 0, datagramPacket.getLength());
@@ -52,8 +52,8 @@ public class MulticastMessageReceiverService extends IntentService {
 
     @Override
     public void onDestroy() {
+        isRunning = false;
         super.onDestroy();
-        running = false;
     }
 
     private MulticastSocket createMulticastSocket() throws IOException {

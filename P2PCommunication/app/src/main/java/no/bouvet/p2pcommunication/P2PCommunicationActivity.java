@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
@@ -25,11 +26,11 @@ import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
 import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
 import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
-import no.bouvet.p2pcommunication.listener.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
-import no.bouvet.p2pcommunication.listener.state.ConnectionStateListener;
-import no.bouvet.p2pcommunication.listener.state.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
+import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pListener, MulticastListener {
@@ -40,9 +41,11 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     private P2pCommunicationFragmentPagerAdapter p2pCommunicationFragmentPagerAdapter;
     private boolean wifiP2pEnabled;
 
-    @InjectView(R.id.view_pager) protected ViewPager viewPager;
-    @InjectView(R.id.my_device_name_text_view) protected TextView myDeviceNameTextView;
-    @InjectView(R.id.my_device_status_text_view) protected TextView myDeviceStatusTextView;
+    @InjectView(R.id.view_pager) ViewPager viewPager;
+    @InjectView(R.id.my_device_name_text_view) TextView myDeviceNameTextView;
+    @InjectView(R.id.my_device_status_text_view) TextView myDeviceStatusTextView;
+    @InjectView(R.id.am_i_host_question_text_view) TextView amIHostQuestionTextView;
+    @InjectView(R.id.host_ip_text_view) TextView hostIpTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
             DiscoveryStateListener discoveryStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
             p2pCommunicationWifiP2pManager.startPeerDiscovery(discoveryStateListener);
         } else {
-            Toast.makeText(this, R.string.wifi_p2p_disabled_please_activate, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.wifi_p2p_disabled_please_enable, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -103,20 +106,24 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
 
     @Override
     public void onConnect(WifiP2pDevice wifiP2pDevice) {
-        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
-        p2pCommunicationWifiP2pManager.connect(wifiP2pDevice, connectionStateListener);
+        InvitationToConnectListener invitationToConnectListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
+        p2pCommunicationWifiP2pManager.connect(wifiP2pDevice, invitationToConnectListener);
+    }
+
+    @Override
+    public void onCancelConnect() {
+        p2pCommunicationWifiP2pManager.cancelConnect();
     }
 
     @Override
     public void onDisconnect() {
-        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
-        p2pCommunicationWifiP2pManager.disconnect(connectionStateListener);
+        p2pCommunicationWifiP2pManager.disconnect();
     }
 
     @Override
     public void onIsDisconnected() {
-        ConnectionStateListener connectionStateListener = p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment();
-        connectionStateListener.onIsDisconnected();
+        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().resetData();
+        p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().resetData();
     }
 
     @Override
@@ -137,20 +144,22 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     }
 
     @Override
-    public void onCancelConnect() {
-        p2pCommunicationWifiP2pManager.cancelConnect();
+    public void onGroupHostInfoChanged(WifiP2pInfo wifiP2pInfo) {
+        if (wifiP2pInfo != null && wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
+            amIHostQuestionTextView.setText(getString(R.string.am_i_host_question) + " " + getResources().getString(R.string.yes));
+            hostIpTextView.setText(getString(R.string.ip_capital_letters) + ": " + wifiP2pInfo.groupOwnerAddress.getHostAddress());
+        } else if (wifiP2pInfo != null && wifiP2pInfo.groupFormed) {
+            amIHostQuestionTextView.setText(getString(R.string.am_i_host_question) + " " + getResources().getString(R.string.no));
+            hostIpTextView.setText("");
+        } else {
+            amIHostQuestionTextView.setText("");
+            hostIpTextView.setText("");
+        }
     }
 
     @Override
     public void onStartReceivingMulticastMessages() {
-        MulticastListener multicastListener = p2pCommunicationFragmentPagerAdapter.getCommunicationFragment();
-        multicastListener.onStartReceivingMulticastMessages();
-    }
-
-    @Override
-    public void onStopReceivingMulticastMessages() {
-        MulticastListener multicastListener = p2pCommunicationFragmentPagerAdapter.getCommunicationFragment();
-        multicastListener.onStopReceivingMulticastMessages();
+        p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().startReceivingMulticastMessages();
     }
 
     private void createAndAcquireMulticastLock() {
@@ -164,6 +173,13 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     private void setViewPager(ViewPager viewPager, PagerAdapter adapter) {
         viewPager.setOnPageChangeListener(new ViewPagerOnPageChangeListener(viewPager));
         viewPager.setAdapter(adapter);
+    }
+
+    private List<Fragment> getFragmentList() {
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(DiscoveryAndConnectionFragment.newInstance());
+        fragmentList.add(CommunicationFragment.newInstance());
+        return fragmentList;
     }
 
     private IntentFilter createWifiP2pIntentFilter() {
@@ -192,10 +208,4 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
         }
     }
 
-    private List<Fragment> getFragmentList() {
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(DiscoveryAndConnectionFragment.newInstance());
-        fragmentList.add(CommunicationFragment.newInstance());
-        return fragmentList;
-    }
 }

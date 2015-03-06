@@ -6,7 +6,7 @@
     <item
         android:id="@+id/enable_p2p_menu_item"
         android:icon="@drawable/ic_action_on_off"
-        android:title="@string/p2p_on_off"
+        android:title="@string/wifi_p2p_on_off"
         app:showAsAction="ifRoom|withText" />
 
 </menu>
