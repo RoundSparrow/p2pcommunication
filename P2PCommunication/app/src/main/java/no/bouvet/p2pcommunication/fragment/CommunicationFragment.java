@@ -26,6 +26,7 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
 
     public static final String TAG = CommunicationFragment.class.getSimpleName();
     private Intent multicastReceiverServiceIntent;
+    private boolean viewsInjected;
 
     @InjectView(R.id.multicast_message_log_text_view) TextView multicastMessageLogTextView;
     @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
@@ -39,6 +40,7 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View communicationFragmentView = inflater.inflate(R.layout.communication_fragment, null);
         ButterKnife.inject(this, communicationFragmentView);
+        viewsInjected = true;
         return communicationFragmentView;
     }
 
@@ -57,7 +59,7 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     }
 
     public void stopReceivingMulticastMessages() {
-        if (multicastReceiverServiceIntent != null) {
+        if (MulticastMessageReceiverService.isRunning) {
             getActivity().stopService(multicastReceiverServiceIntent);
             Log.i(TAG, getString(R.string.multicast_receiver_service_stopped));
         }
@@ -84,8 +86,10 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     }
 
     public void resetData() {
-        multicastMessageLogTextView.setText("");
-        stopReceivingMulticastMessages();
+        if(viewsInjected) {
+            multicastMessageLogTextView.setText("");
+            stopReceivingMulticastMessages();
+        }
     }
 
     private Intent createMulticastReceiverServiceIntent() {

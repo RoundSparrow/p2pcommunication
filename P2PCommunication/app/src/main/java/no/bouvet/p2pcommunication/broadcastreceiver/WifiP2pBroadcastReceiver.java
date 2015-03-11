@@ -91,8 +91,4 @@ public class WifiP2pBroadcastReceiver extends BroadcastReceiver {
         wifiP2pListener.onThisDeviceChanged(wifiP2pDevice);
         Log.i(TAG, context.getString(R.string.this_device_changed));
     }
-
-
-
-
 }

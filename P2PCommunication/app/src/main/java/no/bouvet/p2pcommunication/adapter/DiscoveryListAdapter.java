@@ -18,26 +18,34 @@ public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
         this.context = context;
     }
 
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
-        DiscoveryListAdapterViewHolder discoveryListAdapterViewHolder;
-
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.discovery_and_connection_list_row, null);
-            discoveryListAdapterViewHolder = new DiscoveryListAdapterViewHolder(convertView);
-            convertView.setTag(discoveryListAdapterViewHolder);
-        } else {
-            discoveryListAdapterViewHolder = (DiscoveryListAdapterViewHolder) convertView.getTag();
-        }
+        convertView = ensureConvertView(convertView);
+        DiscoveryListAdapterViewHolder discoveryListAdapterViewHolder = ensureDiscoveryListAdapterViewHolder(convertView);
 
         final WifiP2pDevice wifiP2pDevice = getItem(position);
         discoveryListAdapterViewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
         discoveryListAdapterViewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
 
         return convertView;
+    }
+
+    private View ensureConvertView(View convertView) {
+        if (convertView == null) {
+            convertView = getLayoutInflaterService().inflate(R.layout.discovery_and_connection_list_row, null);
+        }
+        return convertView;
+    }
+
+    private DiscoveryListAdapterViewHolder ensureDiscoveryListAdapterViewHolder(View convertView) {
+        if (convertView.getTag() == null) {
+            convertView.setTag(new DiscoveryListAdapterViewHolder(convertView));
+        }
+        return (DiscoveryListAdapterViewHolder) convertView.getTag();
+    }
+
+    private LayoutInflater getLayoutInflaterService() {
+        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     private String getDeviceStatus(int deviceStatus) {

@@ -22,14 +22,17 @@ public class MulticastConnectionInfoHelper {
     }
 
     public static NetworkInterface getNetworkInterface() throws SocketException {
-        NetworkInterface networkInterface = null;
         Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
         while (networkInterfaceEnumeration.hasMoreElements()) {
-            NetworkInterface tempNetworkInterface = networkInterfaceEnumeration.nextElement();
-            if (tempNetworkInterface.isUp() && (tempNetworkInterface.getDisplayName().equals(NETWORK_INTERFACE_NAME) || tempNetworkInterface.getDisplayName().contains(ALTERNATE_NETWORK_INTERFACE_NAME))) {
-                networkInterface = tempNetworkInterface;
+            NetworkInterface networkInterface = networkInterfaceEnumeration.nextElement();
+            if (isWifiDirectInterface(networkInterface)) {
+                return networkInterface;
             }
         }
-        return networkInterface;
+        return null;
+    }
+
+    private static boolean isWifiDirectInterface(NetworkInterface networkInterface) throws SocketException {
+        return networkInterface.isUp() && (networkInterface.getDisplayName().equals(NETWORK_INTERFACE_NAME) || networkInterface.getDisplayName().contains(ALTERNATE_NETWORK_INTERFACE_NAME));
     }
 }

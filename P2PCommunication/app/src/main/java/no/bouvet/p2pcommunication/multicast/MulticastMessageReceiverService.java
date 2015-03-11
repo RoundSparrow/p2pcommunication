@@ -20,8 +20,8 @@ import java.net.UnknownHostException;
 public class MulticastMessageReceiverService extends IntentService {
 
     public static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
-    public static final String ACTION_LISTEN_FOR_MULTICAST = "no.bouvet.p2pcommunication.multicast.action.ACTION_LISTEN_FOR_MULTICAST";
-    public static final String EXTRA_MESSENGER = "no.bouvet.p2pcommunication.multicast.extra.EXTRA_MESSENGER";
+    public static final String ACTION_LISTEN_FOR_MULTICAST = "ACTION_LISTEN_FOR_MULTICAST";
+    public static final String EXTRA_MESSENGER = "EXTRA_MESSENGER";
     public static boolean isRunning = false;
 
     public MulticastMessageReceiverService() {

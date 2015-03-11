@@ -18,9 +18,16 @@ public class MulticastMessageReceivedHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-        Bundle receivedData = message.getData();
-        String receivedMessage = receivedData.getString(RECEIVED_MESSAGE);
-        String senderIpAddress = receivedData.getString(SENDER_IP_ADDRESS);
+        String receivedMessage = getReceivedMessage(message);
+        String senderIpAddress = getSenderIpAddress(message);
         multicastMessageReceivedListener.onMulticastMessageReceived(receivedMessage, senderIpAddress);
+    }
+
+    private String getSenderIpAddress(Message message) {
+        return message.getData().getString(SENDER_IP_ADDRESS);
+    }
+
+    private String getReceivedMessage(Message message) {
+        return message.getData().getString(RECEIVED_MESSAGE);
     }
 }

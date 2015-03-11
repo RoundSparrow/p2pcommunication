@@ -38,7 +38,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
     private DiscoveryListAdapter discoveryListAdapter;
     private WifiP2pListener wifiP2pListener;
-    private boolean activityCreated;
+    private boolean viewsInjected;
 
     @InjectView(R.id.search_layout) LinearLayout searchLayout;
     @InjectView(R.id.left_bottom_button) Button leftBottomButton;
@@ -53,6 +53,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View discoveryAndConnectionFragmentView = layoutInflater.inflate(R.layout.discovery_and_connection_fragment, container, false);
         ButterKnife.inject(this, discoveryAndConnectionFragmentView);
+        viewsInjected = true;
         return discoveryAndConnectionFragmentView;
     }
 
@@ -65,7 +66,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         setListAdapter(discoveryListAdapter);
         updateButton(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
         updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
-        activityCreated = true;
+
     }
 
     @Override
@@ -112,7 +113,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     }
 
     public void resetData() {
-        if (activityCreated) {
+        if (viewsInjected) {
             wifiP2pListener.onGroupHostInfoChanged(null);
             updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
             Log.i(TAG, getString(R.string.data_has_been_reset));
