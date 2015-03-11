@@ -8,13 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
+import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
@@ -30,10 +31,14 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
 
     @InjectView(R.id.multicast_message_log_text_view) TextView multicastMessageLogTextView;
     @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
-    @InjectView(R.id.send_button) Button sendButton;
+    @InjectView(R.id.send_button) ImageButton sendButton;
 
     public static Fragment newInstance() {
-        return new CommunicationFragment();
+        CommunicationFragment communicationFragment = new CommunicationFragment();
+        Bundle fragmentArguments = new Bundle();
+        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "MULTICAST CHAT");
+        communicationFragment.setArguments(fragmentArguments);
+        return communicationFragment;
     }
 
     @Override

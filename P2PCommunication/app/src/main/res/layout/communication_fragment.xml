@@ -6,19 +6,6 @@
     tools:context=".P2PCommunicationActivity">
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:gravity="center_vertical"
-        android:text="@string/multicast_chat_capital_letters" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/holo_blue_light" />
-
-    <TextView
         android:id="@+id/multicast_message_log_text_view"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -34,14 +21,20 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="@dimen/side_margin"
+            android:layout_marginRight="@dimen/side_margin"
             android:inputType="textMultiLine"
-            android:ems="10" />
+            android:ems="10"
+            android:hint="@string/write_a_message"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/send" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/side_margin"
+            android:background="@drawable/send_button_click_animation"
+            android:src="@drawable/ic_action_send_now"
+            style="?android:attr/buttonBarButtonStyle"/>
 
     </LinearLayout>
 

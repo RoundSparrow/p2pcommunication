@@ -11,6 +11,7 @@ import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
 
 public class P2pCommunicationFragmentPagerAdapter extends FragmentPagerAdapter {
 
+    public static final String FRAGMENT_TITLE = "FRAGMENT_TITLE";
     private List<Fragment> fragmentList;
 
     public P2pCommunicationFragmentPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
@@ -26,6 +27,11 @@ public class P2pCommunicationFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return fragmentList.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return fragmentList.get(position).getArguments().getString(FRAGMENT_TITLE);
     }
 
     public DiscoveryAndConnectionFragment getDiscoveryAndConnectionFragment() {
