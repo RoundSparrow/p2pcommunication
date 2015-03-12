@@ -45,6 +45,12 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         sendButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
