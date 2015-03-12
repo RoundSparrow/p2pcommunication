@@ -50,6 +50,12 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         chatListAdapter = new ChatListAdapter(getActivity(), R.layout.communication_fragment_list_row);
