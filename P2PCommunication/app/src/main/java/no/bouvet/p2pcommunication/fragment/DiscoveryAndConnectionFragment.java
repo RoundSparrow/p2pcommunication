@@ -47,9 +47,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
 
     public static Fragment newInstance() {
         DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
-        Bundle fragmentArguments = new Bundle();
-        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "AVAILABLE DEVICES");
-        discoveryAndConnectionFragment.setArguments(fragmentArguments);
+        discoveryAndConnectionFragment.setArguments(getFragmentArguments());
         return discoveryAndConnectionFragment;
     }
 
@@ -116,12 +114,18 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         updateButton(rightBottomButton, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(wifiP2pListener));
     }
 
-    public void resetData() {
+    public void reset() {
         if (viewsInjected) {
             wifiP2pListener.onGroupHostInfoChanged(null);
             updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
             Log.i(TAG, getString(R.string.data_has_been_reset));
         }
+    }
+
+    private static Bundle getFragmentArguments() {
+        Bundle fragmentArguments = new Bundle();
+        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "AVAILABLE DEVICES");
+        return fragmentArguments;
     }
 
     private void updateButton(Button button, String text, OnClickListener onClickListener) {
@@ -138,6 +142,5 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         discoveryListAdapter.clear();
         discoveryListAdapter.notifyDataSetChanged();
     }
-
 
 }

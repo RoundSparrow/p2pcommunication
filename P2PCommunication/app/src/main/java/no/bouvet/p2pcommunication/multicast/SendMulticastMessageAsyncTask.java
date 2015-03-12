@@ -44,7 +44,7 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
     @Override
     protected void onPostExecute(Boolean success) {
         if (!success) {
-            multicastMessageSentListener.onMessageFailedToBeMulticasted();
+            multicastMessageSentListener.onCouldNotSendMessage();
         }
         userInputHandler.clearUserInput();
     }

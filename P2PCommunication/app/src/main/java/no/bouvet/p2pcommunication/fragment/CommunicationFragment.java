@@ -35,9 +35,7 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
 
     public static Fragment newInstance() {
         CommunicationFragment communicationFragment = new CommunicationFragment();
-        Bundle fragmentArguments = new Bundle();
-        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "MULTICAST CHAT");
-        communicationFragment.setArguments(fragmentArguments);
+        communicationFragment.setArguments(getFragmentArguments());
         return communicationFragment;
     }
 
@@ -76,7 +74,7 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     }
 
     @Override
-    public void onMessageFailedToBeMulticasted() {
+    public void onCouldNotSendMessage() {
         multicastMessageLogTextView.setText(multicastMessageLogTextView.getText() + getString(R.string.message_not_multicasted) + "\n");
     }
 
@@ -90,11 +88,17 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
         userInputEditText.setText("");
     }
 
-    public void resetData() {
+    public void reset() {
         if(viewsInjected) {
             multicastMessageLogTextView.setText("");
             stopReceivingMulticastMessages();
         }
+    }
+
+    private static Bundle getFragmentArguments() {
+        Bundle fragmentArguments = new Bundle();
+        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "MULTICAST CHAT");
+        return fragmentArguments;
     }
 
     private Intent createMulticastReceiverServiceIntent() {
