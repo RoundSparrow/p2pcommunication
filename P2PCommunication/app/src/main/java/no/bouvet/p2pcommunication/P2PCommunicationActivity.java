@@ -122,8 +122,8 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
 
     @Override
     public void onIsDisconnected() {
-        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().resetData();
-        p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().resetData();
+        p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().reset();
+        p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().reset();
     }
 
     @Override
@@ -141,6 +141,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     public void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice) {
         myDeviceNameTextView.setText(wifiP2pDevice.deviceName);
         myDeviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
+
     }
 
     @Override

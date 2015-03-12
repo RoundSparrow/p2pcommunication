@@ -15,23 +15,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.DiscoveryListAdapter;
-import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
+import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
+import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pCancelInvitationOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pCreateGroupOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pDisconnectOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStartDiscoveryOnClickListener;
 import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStopDiscoveryOnClickListener;
-import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
-import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 
 public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, InvitationToConnectListener, ConnectionInfoListener {
 
@@ -40,13 +40,15 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     private WifiP2pListener wifiP2pListener;
     private boolean viewsInjected;
 
-    @InjectView(R.id.search_layout) LinearLayout searchLayout;
+    @InjectView(R.id.search_layout) RelativeLayout searchLayout;
+    @InjectView(R.id.no_devices_found_layout) RelativeLayout noDevicesFoundLayout;
     @InjectView(R.id.left_bottom_button) Button leftBottomButton;
     @InjectView(R.id.right_bottom_button) Button rightBottomButton;
-    @InjectView(R.id.no_devices_found_text_view) TextView noDevicesFoundTextView;
 
     public static Fragment newInstance() {
-        return new DiscoveryAndConnectionFragment();
+        DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
+        discoveryAndConnectionFragment.setArguments(getFragmentArguments());
+        return discoveryAndConnectionFragment;
     }
 
     @Override
@@ -86,6 +88,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public void onStartedDiscovery() {
         clearDiscoveryList();
         searchLayout.setVisibility(View.VISIBLE);
+        noDevicesFoundLayout.setVisibility(View.GONE);
         updateButton(leftBottomButton, getString(R.string.stop), new WifiP2pStopDiscoveryOnClickListener(wifiP2pListener));
     }
 
@@ -99,9 +102,8 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
         clearDiscoveryList();
         addAllDiscoveredDevicesToDiscoveryList(wifiP2pDeviceList);
-        noDevicesFoundTextView.setVisibility(View.GONE);
         if (discoveryListAdapter.isEmpty()) {
-            noDevicesFoundTextView.setVisibility(View.VISIBLE);
+            noDevicesFoundLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -118,12 +120,18 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         updateButton(rightBottomButton, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(wifiP2pListener));
     }
 
-    public void resetData() {
+    public void reset() {
         if (viewsInjected) {
             wifiP2pListener.onGroupHostInfoChanged(null);
             updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
             Log.i(TAG, getString(R.string.data_has_been_reset));
         }
+    }
+
+    private static Bundle getFragmentArguments() {
+        Bundle fragmentArguments = new Bundle();
+        fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "AVAILABLE DEVICES");
+        return fragmentArguments;
     }
 
     private void updateButton(Button button, String text, OnClickListener onClickListener) {
@@ -140,6 +148,5 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         discoveryListAdapter.clear();
         discoveryListAdapter.notifyDataSetChanged();
     }
-
 
 }

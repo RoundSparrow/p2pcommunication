@@ -2,10 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".P2PCommunicationActivity">
 
@@ -13,13 +9,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="@string/me_capital_letters" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/holo_blue_light" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/teal_500"
+        android:text="@string/me_capital_letters"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:textColor="@color/white"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -31,7 +28,6 @@
             android:id="@+id/phone_icon"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginRight="@dimen/image_view_margin_right"
             android:src="@drawable/ic_action_phone" />
 
         <LinearLayout
@@ -82,6 +78,16 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:id="@+id/view_pager">
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/teal_500"
+            android:textColor="@color/white"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
 
     </android.support.v4.view.ViewPager>
 

@@ -57,5 +57,6 @@
     <string name="cancel_invitation">Cancel invitation</string>
     <string name="multicast_receiver_service_stopped">Multicast receiver service stopped</string>
     <string name="multicast_receiver_service_started">Multicast receiver service started</string>
+    <string name="write_a_message">Write a message</string>
 
 </resources>
