@@ -5,11 +5,14 @@
     android:orientation="vertical"
     tools:context=".P2PCommunicationActivity">
 
-    <TextView
-        android:id="@+id/multicast_message_log_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <ListView
+        android:id="@android:id/list"
+        android:layout_height="0dip"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="visible"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -12,10 +12,12 @@ import no.bouvet.p2pcommunication.R;
 public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private Context context;
+    private int layoutResourceId;
 
-    public DiscoveryListAdapter(Context context, int resource) {
-        super(context, resource);
+    public DiscoveryListAdapter(Context context, int layoutResourceId) {
+        super(context, layoutResourceId);
         this.context = context;
+        this.layoutResourceId = layoutResourceId;
     }
 
     @Override
@@ -23,7 +25,7 @@ public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
         convertView = ensureConvertView(convertView);
         DiscoveryListAdapterViewHolder discoveryListAdapterViewHolder = ensureDiscoveryListAdapterViewHolder(convertView);
 
-        final WifiP2pDevice wifiP2pDevice = getItem(position);
+        WifiP2pDevice wifiP2pDevice = getItem(position);
         discoveryListAdapterViewHolder.deviceNameTextView.setText(wifiP2pDevice.deviceName);
         discoveryListAdapterViewHolder.deviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
 
@@ -32,7 +34,7 @@ public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
     private View ensureConvertView(View convertView) {
         if (convertView == null) {
-            convertView = getLayoutInflaterService().inflate(R.layout.discovery_and_connection_list_row, null);
+            convertView = getLayoutInflaterService().inflate(layoutResourceId, null);
         }
         return convertView;
     }
@@ -64,4 +66,5 @@ public class DiscoveryListAdapter extends ArrayAdapter<WifiP2pDevice> {
                 return context.getString(R.string.unknown);
         }
     }
+
 }

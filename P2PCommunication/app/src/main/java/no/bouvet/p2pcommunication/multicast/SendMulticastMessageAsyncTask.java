@@ -13,6 +13,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
+import no.bouvet.p2pcommunication.util.NetworkUtil;
+import no.bouvet.p2pcommunication.util.UserInputHandler;
 
 public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boolean> {
 
@@ -31,8 +33,8 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
         boolean success = false;
         try {
             MulticastSocket multicastSocket = createMulticastSocket();
-            String multicastMessage = userInputHandler.getMessageToBeSentFromUserInput();
-            DatagramPacket datagramPacket = new DatagramPacket(multicastMessage.getBytes(), multicastMessage.length(), getMulticastGroupAddress(), getPort());
+            String messageToBeSent = userInputHandler.getMessageToBeSentFromUserInput();
+            DatagramPacket datagramPacket = new DatagramPacket(messageToBeSent.getBytes(), messageToBeSent.length(), getMulticastGroupAddress(), getPort());
             multicastSocket.send(datagramPacket);
             success = true;
         } catch (IOException ioException) {
@@ -57,15 +59,15 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
     }
 
     private NetworkInterface getNetworkInterface() throws SocketException {
-        return MulticastConnectionInfoHelper.getNetworkInterface();
+        return NetworkUtil.getNetworkInterface();
     }
 
     private InetAddress getMulticastGroupAddress() throws UnknownHostException {
-        return MulticastConnectionInfoHelper.getMulticastGroupAddress();
+        return NetworkUtil.getMulticastGroupAddress();
     }
 
     private int getPort() {
-        return MulticastConnectionInfoHelper.getPort();
+        return NetworkUtil.getPort();
     }
 
 

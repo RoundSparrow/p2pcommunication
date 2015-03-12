@@ -1,4 +1,4 @@
-package no.bouvet.p2pcommunication.multicast;
+package no.bouvet.p2pcommunication.util;
 
 public interface UserInputHandler {
 

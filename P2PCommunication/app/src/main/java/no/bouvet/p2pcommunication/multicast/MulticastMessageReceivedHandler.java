@@ -1,10 +1,10 @@
 package no.bouvet.p2pcommunication.multicast;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
+import no.bouvet.p2pcommunication.util.NetworkUtil;
 
 public class MulticastMessageReceivedHandler extends Handler {
 
@@ -20,7 +20,8 @@ public class MulticastMessageReceivedHandler extends Handler {
     public void handleMessage(Message message) {
         String receivedMessage = getReceivedMessage(message);
         String senderIpAddress = getSenderIpAddress(message);
-        multicastMessageReceivedListener.onMulticastMessageReceived(receivedMessage, senderIpAddress);
+        MulticastMessage multicastMessage = createMulticastMessage(receivedMessage, senderIpAddress);
+        multicastMessageReceivedListener.onMulticastMessageReceived(multicastMessage);
     }
 
     private String getSenderIpAddress(Message message) {
@@ -29,5 +30,13 @@ public class MulticastMessageReceivedHandler extends Handler {
 
     private String getReceivedMessage(Message message) {
         return message.getData().getString(RECEIVED_MESSAGE);
+    }
+
+    private MulticastMessage createMulticastMessage(String receivedMessage, String senderIpAddress) {
+        MulticastMessage multicastMessage = new MulticastMessage(receivedMessage, senderIpAddress);
+        if (senderIpAddress.equals(NetworkUtil.getMyWifiP2pIpAddress())) {
+            multicastMessage.setSentByMe(true);
+        }
+        return multicastMessage;
     }
 }

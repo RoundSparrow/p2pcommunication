@@ -1,4 +1,8 @@
-package no.bouvet.p2pcommunication.multicast;
+package no.bouvet.p2pcommunication.util;
+
+import android.util.Log;
+
+import org.apache.http.conn.util.InetAddressUtils;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -6,19 +10,20 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-public class MulticastConnectionInfoHelper {
+public class NetworkUtil {
 
-    private static final int PORT = 40000;
-    private static final String GROUP_IP = "239.255.1.1";
+    private static final String TAG = NetworkUtil.class.getSimpleName();
+    private static final String MULTICAST_GROUP_IP = "239.255.1.1";
     private static final String NETWORK_INTERFACE_NAME = "p2p-wlan0-0";
     private static final String ALTERNATE_NETWORK_INTERFACE_NAME = "p2p-p2p0";
+    private static final int PORT = 40000;
 
     public static int getPort() {
         return PORT;
     }
 
     public static InetAddress getMulticastGroupAddress() throws UnknownHostException {
-       return InetAddress.getByName(GROUP_IP);
+       return InetAddress.getByName(MULTICAST_GROUP_IP);
     }
 
     public static NetworkInterface getNetworkInterface() throws SocketException {
@@ -32,7 +37,28 @@ public class MulticastConnectionInfoHelper {
         return null;
     }
 
+    public static String getMyWifiP2pIpAddress() {
+        try {
+            Enumeration<InetAddress> inetAddressEnumeration = getNetworkInterface().getInetAddresses();
+            while (inetAddressEnumeration.hasMoreElements()) {
+                InetAddress inetAddress = inetAddressEnumeration.nextElement();
+                if (isIpv4Address(inetAddress)) {
+                    return inetAddress.getHostAddress().toString();
+                }
+            }
+        } catch (SocketException e) {
+            Log.e(TAG, e.toString());
+        }
+        return null;
+    }
+
     private static boolean isWifiDirectInterface(NetworkInterface networkInterface) throws SocketException {
         return networkInterface.isUp() && (networkInterface.getDisplayName().equals(NETWORK_INTERFACE_NAME) || networkInterface.getDisplayName().contains(ALTERNATE_NETWORK_INTERFACE_NAME));
     }
+
+    private static boolean isIpv4Address(InetAddress inetAddress) {
+        return !inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress());
+    }
+
+
 }

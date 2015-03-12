@@ -64,7 +64,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         super.onActivityCreated(savedInstanceState);
 
         wifiP2pListener = (WifiP2pListener) getActivity();
-        discoveryListAdapter = new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_list_row);
+        discoveryListAdapter = new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_fragment_list_row);
         setListAdapter(discoveryListAdapter);
         updateButton(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
         updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
@@ -139,8 +139,10 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     }
 
     private void clearDiscoveryList() {
-        discoveryListAdapter.clear();
-        discoveryListAdapter.notifyDataSetChanged();
+        if (discoveryListAdapter != null) {
+            discoveryListAdapter.clear();
+            discoveryListAdapter.notifyDataSetChanged();
+        }
     }
 
 }

@@ -4,7 +4,7 @@ import android.view.View;
 
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 import no.bouvet.p2pcommunication.multicast.SendMulticastMessageAsyncTask;
-import no.bouvet.p2pcommunication.multicast.UserInputHandler;
+import no.bouvet.p2pcommunication.util.UserInputHandler;
 
 public class SendMulticastMessageOnClickListener implements View.OnClickListener {
 

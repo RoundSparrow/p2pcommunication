@@ -17,11 +17,13 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import no.bouvet.p2pcommunication.util.NetworkUtil;
+
 public class MulticastMessageReceiverService extends IntentService {
 
     public static final String TAG = MulticastMessageReceiverService.class.getSimpleName();
     public static final String ACTION_LISTEN_FOR_MULTICAST = "ACTION_LISTEN_FOR_MULTICAST";
-    public static final String EXTRA_MESSENGER = "EXTRA_MESSENGER";
+    public static final String EXTRA_HANDLER_MESSENGER = "EXTRA_HANDLER_MESSENGER";
     public static boolean isRunning = false;
 
     public MulticastMessageReceiverService() {
@@ -34,7 +36,7 @@ public class MulticastMessageReceiverService extends IntentService {
         if (action.equals(ACTION_LISTEN_FOR_MULTICAST)) {
             try {
                 isRunning = true;
-                Messenger messenger = getMessenger(intent);
+                Messenger handlerMessenger = getHandlerMessenger(intent);
                 MulticastSocket multicastSocket = createMulticastSocket();
                 byte[] buffer = new byte[1024];
                 while (isRunning) {
@@ -42,7 +44,7 @@ public class MulticastMessageReceiverService extends IntentService {
                     multicastSocket.receive(datagramPacket);
                     String receivedMessage = new String(buffer, 0, datagramPacket.getLength());
                     String senderIpAddress = datagramPacket.getAddress().getHostAddress();
-                    messenger.send(createMessage(receivedMessage, senderIpAddress));
+                    handlerMessenger.send(createHandlerMessage(receivedMessage, senderIpAddress));
                 }
             } catch (IOException | RemoteException e) {
                 Log.e(TAG, e.toString());
@@ -63,29 +65,29 @@ public class MulticastMessageReceiverService extends IntentService {
         return multicastSocket;
     }
 
-    private Messenger getMessenger(Intent intent) {
-        return (Messenger) intent.getExtras().get(EXTRA_MESSENGER);
+    private Messenger getHandlerMessenger(Intent intent) {
+        return (Messenger) intent.getExtras().get(EXTRA_HANDLER_MESSENGER);
     }
 
-    private Message createMessage(String receivedMessage, String senderIpAddress) {
+    private Message createHandlerMessage(String receivedMessage, String senderIpAddress) {
         Bundle receivedData = new Bundle();
         receivedData.putString(MulticastMessageReceivedHandler.RECEIVED_MESSAGE, receivedMessage);
         receivedData.putString(MulticastMessageReceivedHandler.SENDER_IP_ADDRESS, senderIpAddress);
-        Message message = new Message();
-        message.setData(receivedData);
-        return message;
+        Message handlerMessage = new Message();
+        handlerMessage.setData(receivedData);
+        return handlerMessage;
     }
 
     private NetworkInterface getNetworkInterface() throws SocketException {
-        return MulticastConnectionInfoHelper.getNetworkInterface();
+        return NetworkUtil.getNetworkInterface();
     }
 
     private InetAddress getMulticastGroupAddress() throws UnknownHostException {
-        return MulticastConnectionInfoHelper.getMulticastGroupAddress();
+        return NetworkUtil.getMulticastGroupAddress();
     }
 
     private int getPort() {
-        return MulticastConnectionInfoHelper.getPort();
+        return NetworkUtil.getPort();
     }
 
 }

@@ -4,32 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Messenger;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
+import no.bouvet.p2pcommunication.adapter.ChatListAdapter;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
 import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
+import no.bouvet.p2pcommunication.multicast.MulticastMessage;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceivedHandler;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceiverService;
-import no.bouvet.p2pcommunication.multicast.UserInputHandler;
+import no.bouvet.p2pcommunication.util.UserInputHandler;
 
-public class CommunicationFragment extends Fragment implements MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
+public class CommunicationFragment extends ListFragment implements MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
 
     public static final String TAG = CommunicationFragment.class.getSimpleName();
-    private Intent multicastReceiverServiceIntent;
     private boolean viewsInjected;
+    private Intent multicastReceiverServiceIntent;
+    private ChatListAdapter chatListAdapter;
 
-    @InjectView(R.id.multicast_message_log_text_view) TextView multicastMessageLogTextView;
     @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
     @InjectView(R.id.send_button) ImageButton sendButton;
 
@@ -50,6 +52,8 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        chatListAdapter = new ChatListAdapter(getActivity(), R.layout.communication_fragment_list_row);
+        setListAdapter(chatListAdapter);
         sendButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
     }
 
@@ -69,13 +73,14 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
     }
 
     @Override
-    public void onMulticastMessageReceived(String receivedMessage, String senderIpAddress) {
-        multicastMessageLogTextView.setText(multicastMessageLogTextView.getText() + senderIpAddress + ": " + receivedMessage + "\n");
+    public void onMulticastMessageReceived(MulticastMessage multicastMessage) {
+        addMulticastMessageToChatList(multicastMessage);
     }
 
     @Override
     public void onCouldNotSendMessage() {
-        multicastMessageLogTextView.setText(multicastMessageLogTextView.getText() + getString(R.string.message_not_multicasted) + "\n");
+        MulticastMessage multicastMessage = new MulticastMessage(getString(R.string.message_not_multicasted), "", true);
+        addMulticastMessageToChatList(multicastMessage);
     }
 
     @Override
@@ -90,7 +95,8 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
 
     public void reset() {
         if(viewsInjected) {
-            multicastMessageLogTextView.setText("");
+            chatListAdapter.clear();
+            chatListAdapter.notifyDataSetChanged();
             stopReceivingMulticastMessages();
         }
     }
@@ -105,7 +111,13 @@ public class CommunicationFragment extends Fragment implements MulticastMessageR
         Intent multicastReceiverServiceIntent = new Intent(getActivity(), MulticastMessageReceiverService.class);
         multicastReceiverServiceIntent.setAction(MulticastMessageReceiverService.ACTION_LISTEN_FOR_MULTICAST);
         MulticastMessageReceivedHandler multicastMessageReceivedHandler = new MulticastMessageReceivedHandler(this);
-        multicastReceiverServiceIntent.putExtra(MulticastMessageReceiverService.EXTRA_MESSENGER, new Messenger(multicastMessageReceivedHandler));
+        multicastReceiverServiceIntent.putExtra(MulticastMessageReceiverService.EXTRA_HANDLER_MESSENGER, new Messenger(multicastMessageReceivedHandler));
         return multicastReceiverServiceIntent;
+    }
+
+    private void addMulticastMessageToChatList(MulticastMessage multicastMessage) {
+        chatListAdapter.add(multicastMessage);
+        chatListAdapter.notifyDataSetChanged();
+        getListView().setSelection(chatListAdapter.getCount() - 1);
     }
 }

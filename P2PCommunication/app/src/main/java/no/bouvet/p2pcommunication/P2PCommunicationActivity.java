@@ -26,11 +26,11 @@ import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
 import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
 import no.bouvet.p2pcommunication.fragment.DiscoveryAndConnectionFragment;
-import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
+import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
 import no.bouvet.p2pcommunication.listener.onpagechange.ViewPagerOnPageChangeListener;
-import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
-import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
+import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 import no.bouvet.p2pcommunication.wifip2p.P2pCommunicationWifiP2pManager;
 
 public class P2PCommunicationActivity extends FragmentActivity implements WifiP2pListener, MulticastListener {
@@ -141,7 +141,6 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     public void onThisDeviceChanged(WifiP2pDevice wifiP2pDevice) {
         myDeviceNameTextView.setText(wifiP2pDevice.deviceName);
         myDeviceStatusTextView.setText(getDeviceStatus(wifiP2pDevice.status));
-
     }
 
     @Override
@@ -171,9 +170,9 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
         }
     }
 
-    private void setViewPager(ViewPager viewPager, PagerAdapter adapter) {
+    private void setViewPager(ViewPager viewPager, PagerAdapter pagerAdapter) {
         viewPager.setOnPageChangeListener(new ViewPagerOnPageChangeListener(viewPager));
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(pagerAdapter);
     }
 
     private List<Fragment> getFragmentList() {
