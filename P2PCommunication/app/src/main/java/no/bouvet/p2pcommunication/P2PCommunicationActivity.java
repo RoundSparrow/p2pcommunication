@@ -124,6 +124,7 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     public void onIsDisconnected() {
         p2pCommunicationFragmentPagerAdapter.getDiscoveryAndConnectionFragment().reset();
         p2pCommunicationFragmentPagerAdapter.getCommunicationFragment().reset();
+        onGroupHostInfoChanged(null);
     }
 
     @Override

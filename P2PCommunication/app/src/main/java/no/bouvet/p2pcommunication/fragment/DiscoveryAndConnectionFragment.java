@@ -36,9 +36,9 @@ import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
 public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, InvitationToConnectListener, ConnectionInfoListener {
 
     public static final String TAG = DiscoveryAndConnectionFragment.class.getSimpleName();
+    private boolean viewsInjected;
     private DiscoveryListAdapter discoveryListAdapter;
     private WifiP2pListener wifiP2pListener;
-    private boolean viewsInjected;
 
     @InjectView(R.id.search_layout) RelativeLayout searchLayout;
     @InjectView(R.id.no_devices_found_layout) RelativeLayout noDevicesFoundLayout;
@@ -72,9 +72,8 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         wifiP2pListener = (WifiP2pListener) getActivity();
         discoveryListAdapter = new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_fragment_list_row);
         setListAdapter(discoveryListAdapter);
-        updateButton(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
-        updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
-
+        updateButtonState(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
+        updateButtonState(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
     }
 
     @Override
@@ -89,13 +88,12 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         clearDiscoveryList();
         searchLayout.setVisibility(View.VISIBLE);
         noDevicesFoundLayout.setVisibility(View.GONE);
-        updateButton(leftBottomButton, getString(R.string.stop), new WifiP2pStopDiscoveryOnClickListener(wifiP2pListener));
+        updateButtonState(leftBottomButton, getString(R.string.stop), new WifiP2pStopDiscoveryOnClickListener(wifiP2pListener));
     }
 
     @Override
     public void onStoppedDiscovery() {
         searchLayout.setVisibility(View.GONE);
-        updateButton(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
     }
 
     @Override
@@ -109,7 +107,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
 
     @Override
     public void onSentInvitationToConnect() {
-        updateButton(rightBottomButton, getString(R.string.cancel_invitation), new WifiP2pCancelInvitationOnClickListener(wifiP2pListener));
+        updateButtonState(rightBottomButton, getString(R.string.cancel_invitation), new WifiP2pCancelInvitationOnClickListener(wifiP2pListener));
     }
 
     @Override
@@ -117,13 +115,12 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         wifiP2pListener.onStopPeerDiscovery();
         wifiP2pListener.onGroupHostInfoChanged(wifiP2pInfo);
         ((MulticastListener) getActivity()).onStartReceivingMulticastMessages();
-        updateButton(rightBottomButton, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(wifiP2pListener));
+        updateButtonState(rightBottomButton, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(wifiP2pListener));
     }
 
     public void reset() {
         if (viewsInjected) {
-            wifiP2pListener.onGroupHostInfoChanged(null);
-            updateButton(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
+            updateButtonState(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
             Log.i(TAG, getString(R.string.data_has_been_reset));
         }
     }
@@ -134,7 +131,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         return fragmentArguments;
     }
 
-    private void updateButton(Button button, String text, OnClickListener onClickListener) {
+    private void updateButtonState(Button button, String text, OnClickListener onClickListener) {
         button.setText(text);
         button.setOnClickListener(onClickListener);
     }
