@@ -10,19 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.ChatListAdapter;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageReceivedListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastMessageSentListener;
-import no.bouvet.p2pcommunication.listener.onclick.SendMulticastMessageOnClickListener;
 import no.bouvet.p2pcommunication.multicast.MulticastMessage;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceivedHandler;
 import no.bouvet.p2pcommunication.multicast.MulticastMessageReceiverService;
+import no.bouvet.p2pcommunication.multicast.SendMulticastMessageAsyncTask;
 import no.bouvet.p2pcommunication.util.UserInputHandler;
 
 public class CommunicationFragment extends ListFragment implements MulticastMessageReceivedListener, MulticastMessageSentListener, UserInputHandler {
@@ -33,7 +33,6 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
     private ChatListAdapter chatListAdapter;
 
     @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
-    @InjectView(R.id.send_button) ImageButton sendButton;
 
     public static Fragment newInstance() {
         CommunicationFragment communicationFragment = new CommunicationFragment();
@@ -60,7 +59,11 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
         super.onActivityCreated(savedInstanceState);
         chatListAdapter = new ChatListAdapter(getActivity(), R.layout.communication_fragment_list_row);
         setListAdapter(chatListAdapter);
-        sendButton.setOnClickListener(new SendMulticastMessageOnClickListener(this, this));
+    }
+
+    @OnClick(R.id.send_button)
+    public void sendMulticastMessage() {
+        new SendMulticastMessageAsyncTask(this, this).execute();
     }
 
     public void startReceivingMulticastMessages() {

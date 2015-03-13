@@ -12,9 +12,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -26,12 +24,9 @@ import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.listener.discovery.DiscoveryStateListener;
 import no.bouvet.p2pcommunication.listener.invitation.InvitationToConnectListener;
 import no.bouvet.p2pcommunication.listener.multicast.MulticastListener;
-import no.bouvet.p2pcommunication.listener.onclick.WifiP2pCancelInvitationOnClickListener;
-import no.bouvet.p2pcommunication.listener.onclick.WifiP2pCreateGroupOnClickListener;
-import no.bouvet.p2pcommunication.listener.onclick.WifiP2pDisconnectOnClickListener;
-import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStartDiscoveryOnClickListener;
-import no.bouvet.p2pcommunication.listener.onclick.WifiP2pStopDiscoveryOnClickListener;
 import no.bouvet.p2pcommunication.listener.wifip2p.WifiP2pListener;
+import no.bouvet.p2pcommunication.util.button.ConnectionButton;
+import no.bouvet.p2pcommunication.util.button.DiscoveryButton;
 
 public class DiscoveryAndConnectionFragment extends ListFragment implements DiscoveryStateListener, PeerListListener, InvitationToConnectListener, ConnectionInfoListener {
 
@@ -39,11 +34,12 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     private boolean viewsInjected;
     private DiscoveryListAdapter discoveryListAdapter;
     private WifiP2pListener wifiP2pListener;
+    private MulticastListener multicastListener;
 
     @InjectView(R.id.search_layout) RelativeLayout searchLayout;
-    @InjectView(R.id.no_devices_found_layout) RelativeLayout noDevicesFoundLayout;
-    @InjectView(R.id.left_bottom_button) Button leftBottomButton;
-    @InjectView(R.id.right_bottom_button) Button rightBottomButton;
+    @InjectView(R.id.no_devices_available_layout) RelativeLayout noDevicesAvailableLayout;
+    @InjectView(R.id.left_bottom_button) DiscoveryButton leftBottomButton;
+    @InjectView(R.id.right_bottom_button) ConnectionButton rightBottomButton;
 
     public static Fragment newInstance() {
         DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
@@ -70,10 +66,11 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         super.onActivityCreated(savedInstanceState);
 
         wifiP2pListener = (WifiP2pListener) getActivity();
+        multicastListener = (MulticastListener) getActivity();
         discoveryListAdapter = new DiscoveryListAdapter(getActivity(), R.layout.discovery_and_connection_fragment_list_row);
         setListAdapter(discoveryListAdapter);
-        updateButtonState(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
-        updateButtonState(leftBottomButton, getString(R.string.discover), new WifiP2pStartDiscoveryOnClickListener(wifiP2pListener));
+        leftBottomButton.initialize(wifiP2pListener);
+        rightBottomButton.initialize(wifiP2pListener);
     }
 
     @Override
@@ -87,13 +84,14 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     public void onStartedDiscovery() {
         clearDiscoveryList();
         searchLayout.setVisibility(View.VISIBLE);
-        noDevicesFoundLayout.setVisibility(View.GONE);
-        updateButtonState(leftBottomButton, getString(R.string.stop), new WifiP2pStopDiscoveryOnClickListener(wifiP2pListener));
+        noDevicesAvailableLayout.setVisibility(View.GONE);
+        leftBottomButton.setStateStopDiscovery();
     }
 
     @Override
     public void onStoppedDiscovery() {
         searchLayout.setVisibility(View.GONE);
+        leftBottomButton.setStateStartDiscovery();
     }
 
     @Override
@@ -101,27 +99,27 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         clearDiscoveryList();
         addAllDiscoveredDevicesToDiscoveryList(wifiP2pDeviceList);
         if (discoveryListAdapter.isEmpty()) {
-            noDevicesFoundLayout.setVisibility(View.VISIBLE);
+            noDevicesAvailableLayout.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onSentInvitationToConnect() {
-        updateButtonState(rightBottomButton, getString(R.string.cancel_invitation), new WifiP2pCancelInvitationOnClickListener(wifiP2pListener));
+        rightBottomButton.setStateCancelInvitation();
     }
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
         wifiP2pListener.onStopPeerDiscovery();
         wifiP2pListener.onGroupHostInfoChanged(wifiP2pInfo);
-        ((MulticastListener) getActivity()).onStartReceivingMulticastMessages();
-        updateButtonState(rightBottomButton, getString(R.string.disconnect), new WifiP2pDisconnectOnClickListener(wifiP2pListener));
+        multicastListener.onStartReceivingMulticastMessages();
+        rightBottomButton.setStateDisconnect();
     }
 
     public void reset() {
         if (viewsInjected) {
-            updateButtonState(rightBottomButton, getString(R.string.create_group), new WifiP2pCreateGroupOnClickListener(wifiP2pListener));
-            Log.i(TAG, getString(R.string.data_has_been_reset));
+            rightBottomButton.setStateCreateGroup();
+            Log.i(TAG, getString(R.string.has_been_reset));
         }
     }
 
@@ -129,11 +127,6 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
         Bundle fragmentArguments = new Bundle();
         fragmentArguments.putString(P2pCommunicationFragmentPagerAdapter.FRAGMENT_TITLE, "AVAILABLE DEVICES");
         return fragmentArguments;
-    }
-
-    private void updateButtonState(Button button, String text, OnClickListener onClickListener) {
-        button.setText(text);
-        button.setOnClickListener(onClickListener);
     }
 
     private void addAllDiscoveredDevicesToDiscoveryList(WifiP2pDeviceList wifiP2pDeviceList) {

@@ -19,7 +19,7 @@
             android:visibility="visible"/>
 
         <RelativeLayout
-            android:id="@+id/no_devices_found_layout"
+            android:id="@+id/no_devices_available_layout"
             android:layout_width="fill_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
             android:layout_alignParentBottom="true"
@@ -32,7 +32,7 @@
                     android:layout_alignParentLeft="true"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:gravity="center"
-                    android:text="@string/no_devices_found"
+                    android:text="@string/no_devices_available"
                     android:textColor="@color/white"
                     android:textSize="@dimen/abc_text_size_large_material"/>
 
@@ -80,7 +80,7 @@
             android:orientation="horizontal"
             android:background="@color/teal_800">
 
-            <Button
+            <no.bouvet.p2pcommunication.util.button.DiscoveryButton
                 android:id="@+id/left_bottom_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 android:textColor="@color/white"
                 style="?android:attr/buttonBarButtonStyle"/>
 
-            <Button
+            <no.bouvet.p2pcommunication.util.button.ConnectionButton
                 android:id="@+id/right_bottom_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
