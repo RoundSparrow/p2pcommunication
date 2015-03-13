@@ -27,17 +27,17 @@ public class ChatListAdapter extends ArrayAdapter<MulticastMessage> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = ensureConvertView(convertView);
-        ChatListAdapterViewHolder chatListAdapterViewHolder = ensureChatBubblesListAdapterViewHolder(convertView);
+        ChatListAdapterViewHolder chatListAdapterViewHolder = ensureChatListAdapterViewHolder(convertView);
 
         MulticastMessage multicastMessage = getItem(position);
         if (multicastMessage.isSentByMe()) {
             chatListAdapterViewHolder.messageReceivedLayout.setVisibility(View.GONE);
             chatListAdapterViewHolder.messageSentLayout.setVisibility(View.VISIBLE);
-            chatListAdapterViewHolder.messageSentTextView.setText(multicastMessage.getMessage());
+            chatListAdapterViewHolder.messageSentTextView.setText(multicastMessage.getText());
         } else {
             chatListAdapterViewHolder.messageReceivedLayout.setVisibility(View.VISIBLE);
             chatListAdapterViewHolder.messageSentLayout.setVisibility(View.GONE);
-            chatListAdapterViewHolder.messageReceivedTextView.setText(multicastMessage.getSenderIpAddress() + ":\n" + multicastMessage.getMessage());
+            chatListAdapterViewHolder.messageReceivedTextView.setText(multicastMessage.getSenderIpAddress() + ":\n" + multicastMessage.getText());
         }
 
         return convertView;
@@ -54,7 +54,7 @@ public class ChatListAdapter extends ArrayAdapter<MulticastMessage> {
         return convertView;
     }
 
-    private ChatListAdapterViewHolder ensureChatBubblesListAdapterViewHolder(View convertView) {
+    private ChatListAdapterViewHolder ensureChatListAdapterViewHolder(View convertView) {
         if (convertView.getTag() == null) {
             convertView.setTag(new ChatListAdapterViewHolder(convertView));
         }

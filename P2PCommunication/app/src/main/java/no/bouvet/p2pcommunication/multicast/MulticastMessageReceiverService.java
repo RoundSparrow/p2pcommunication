@@ -34,17 +34,13 @@ public class MulticastMessageReceiverService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         final String action = intent.getAction();
         if (action.equals(ACTION_LISTEN_FOR_MULTICAST)) {
+            isRunning = true;
             try {
-                isRunning = true;
-                Messenger handlerMessenger = getHandlerMessenger(intent);
                 MulticastSocket multicastSocket = createMulticastSocket();
-                byte[] buffer = new byte[1024];
                 while (isRunning) {
-                    DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
+                    DatagramPacket datagramPacket = createDatagramPacket();
                     multicastSocket.receive(datagramPacket);
-                    String receivedMessage = new String(buffer, 0, datagramPacket.getLength());
-                    String senderIpAddress = datagramPacket.getAddress().getHostAddress();
-                    handlerMessenger.send(createHandlerMessage(receivedMessage, senderIpAddress));
+                    sendReceivedDataToMulticastMessageReceivedHandler(getHandlerMessenger(intent), datagramPacket);
                 }
             } catch (IOException | RemoteException e) {
                 Log.e(TAG, e.toString());
@@ -58,6 +54,32 @@ public class MulticastMessageReceiverService extends IntentService {
         super.onDestroy();
     }
 
+    private void sendReceivedDataToMulticastMessageReceivedHandler(Messenger handlerMessenger, DatagramPacket datagramPacket) throws RemoteException {
+        Message handlerMessage = createHandlerMessage(getReceivedText(datagramPacket), getSenderIpAddress(datagramPacket));
+        handlerMessenger.send(handlerMessage);
+    }
+
+    private Message createHandlerMessage(String receivedMessage, String senderIpAddress) {
+        Bundle receivedData = new Bundle();
+        receivedData.putString(MulticastMessageReceivedHandler.RECEIVED_TEXT, receivedMessage);
+        receivedData.putString(MulticastMessageReceivedHandler.SENDER_IP_ADDRESS, senderIpAddress);
+        Message handlerMessage = new Message();
+        handlerMessage.setData(receivedData);
+        return handlerMessage;
+    }
+
+    private Messenger getHandlerMessenger(Intent intent) {
+        return (Messenger) intent.getExtras().get(EXTRA_HANDLER_MESSENGER);
+    }
+
+    private String getSenderIpAddress(DatagramPacket datagramPacket) {
+        return datagramPacket.getAddress().getHostAddress();
+    }
+
+    private String getReceivedText(DatagramPacket datagramPacket) {
+        return new String(datagramPacket.getData(), 0, datagramPacket.getLength());
+    }
+
     private MulticastSocket createMulticastSocket() throws IOException {
         MulticastSocket multicastSocket = new MulticastSocket(getPort());
         multicastSocket.setNetworkInterface(getNetworkInterface());
@@ -65,21 +87,8 @@ public class MulticastMessageReceiverService extends IntentService {
         return multicastSocket;
     }
 
-    private Messenger getHandlerMessenger(Intent intent) {
-        return (Messenger) intent.getExtras().get(EXTRA_HANDLER_MESSENGER);
-    }
-
-    private Message createHandlerMessage(String receivedMessage, String senderIpAddress) {
-        Bundle receivedData = new Bundle();
-        receivedData.putString(MulticastMessageReceivedHandler.RECEIVED_MESSAGE, receivedMessage);
-        receivedData.putString(MulticastMessageReceivedHandler.SENDER_IP_ADDRESS, senderIpAddress);
-        Message handlerMessage = new Message();
-        handlerMessage.setData(receivedData);
-        return handlerMessage;
-    }
-
     private NetworkInterface getNetworkInterface() throws SocketException {
-        return NetworkUtil.getNetworkInterface();
+        return NetworkUtil.getWifiP2pNetworkInterface();
     }
 
     private InetAddress getMulticastGroupAddress() throws UnknownHostException {
@@ -90,4 +99,8 @@ public class MulticastMessageReceiverService extends IntentService {
         return NetworkUtil.getPort();
     }
 
+    private DatagramPacket createDatagramPacket() {
+        byte[] buffer = new byte[1024];
+        return new DatagramPacket(buffer, buffer.length);
+    }
 }

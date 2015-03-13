@@ -59,7 +59,7 @@ public class SendMulticastMessageAsyncTask extends AsyncTask<Void, String, Boole
     }
 
     private NetworkInterface getNetworkInterface() throws SocketException {
-        return NetworkUtil.getNetworkInterface();
+        return NetworkUtil.getWifiP2pNetworkInterface();
     }
 
     private InetAddress getMulticastGroupAddress() throws UnknownHostException {

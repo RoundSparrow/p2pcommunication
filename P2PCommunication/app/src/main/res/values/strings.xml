@@ -23,7 +23,7 @@
     <string name="internal_error">Internal error</string>
     <string name="unknown_error">Unknown error</string>
     <string name="failed">Failed</string>
-    <string name="no_devices_found">No devices found</string>
+    <string name="no_devices_available">No devices available</string>
     <string name="unknown">Unknown</string>
     <string name="multicast_chat_capital_letters">MULTICAST CHAT</string>
     <string name="available_devices_capital_letters">AVAILABLE DEVICES</string>
@@ -58,5 +58,6 @@
     <string name="multicast_receiver_service_stopped">Multicast receiver service stopped</string>
     <string name="multicast_receiver_service_started">Multicast receiver service started</string>
     <string name="write_a_message">Write a message</string>
+    <string name="has_been_reset">Has been reset</string>
 
 </resources>

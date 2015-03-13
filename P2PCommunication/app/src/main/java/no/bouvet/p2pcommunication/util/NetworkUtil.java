@@ -26,11 +26,11 @@ public class NetworkUtil {
        return InetAddress.getByName(MULTICAST_GROUP_IP);
     }
 
-    public static NetworkInterface getNetworkInterface() throws SocketException {
+    public static NetworkInterface getWifiP2pNetworkInterface() throws SocketException {
         Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
         while (networkInterfaceEnumeration.hasMoreElements()) {
             NetworkInterface networkInterface = networkInterfaceEnumeration.nextElement();
-            if (isWifiDirectInterface(networkInterface)) {
+            if (isWifiP2pInterface(networkInterface)) {
                 return networkInterface;
             }
         }
@@ -39,7 +39,7 @@ public class NetworkUtil {
 
     public static String getMyWifiP2pIpAddress() {
         try {
-            Enumeration<InetAddress> inetAddressEnumeration = getNetworkInterface().getInetAddresses();
+            Enumeration<InetAddress> inetAddressEnumeration = getWifiP2pNetworkInterface().getInetAddresses();
             while (inetAddressEnumeration.hasMoreElements()) {
                 InetAddress inetAddress = inetAddressEnumeration.nextElement();
                 if (isIpv4Address(inetAddress)) {
@@ -52,7 +52,7 @@ public class NetworkUtil {
         return null;
     }
 
-    private static boolean isWifiDirectInterface(NetworkInterface networkInterface) throws SocketException {
+    private static boolean isWifiP2pInterface(NetworkInterface networkInterface) throws SocketException {
         return networkInterface.isUp() && (networkInterface.getDisplayName().equals(NETWORK_INTERFACE_NAME) || networkInterface.getDisplayName().contains(ALTERNATE_NETWORK_INTERFACE_NAME));
     }
 

@@ -2,23 +2,23 @@ package no.bouvet.p2pcommunication.multicast;
 
 public class MulticastMessage {
 
-    private String message;
+    private String text;
     private String senderIpAddress;
     private boolean sentByMe;
 
-    public MulticastMessage(String message, String senderIpAddress) {
-        this.message = message;
+    public MulticastMessage(String text, String senderIpAddress) {
+        this.text = text;
         this.senderIpAddress = senderIpAddress;
     }
 
-    public MulticastMessage(String message, String senderIpAddress, boolean sentByMe) {
-        this.message = message;
+    public MulticastMessage(String text, String senderIpAddress, boolean sentByMe) {
+        this.text = text;
         this.senderIpAddress = senderIpAddress;
         this.sentByMe = sentByMe;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
     public String getSenderIpAddress() {

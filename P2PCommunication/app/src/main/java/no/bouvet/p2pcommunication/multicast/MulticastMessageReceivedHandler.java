@@ -8,7 +8,7 @@ import no.bouvet.p2pcommunication.util.NetworkUtil;
 
 public class MulticastMessageReceivedHandler extends Handler {
 
-    public static final String RECEIVED_MESSAGE = "RECEIVED_MESSAGE";
+    public static final String RECEIVED_TEXT = "RECEIVED_TEXT";
     public static final String SENDER_IP_ADDRESS = "SENDER_IP_ADDRESS";
     private MulticastMessageReceivedListener multicastMessageReceivedListener;
 
@@ -17,26 +17,26 @@ public class MulticastMessageReceivedHandler extends Handler {
     }
 
     @Override
-    public void handleMessage(Message message) {
-        String receivedMessage = getReceivedMessage(message);
-        String senderIpAddress = getSenderIpAddress(message);
-        MulticastMessage multicastMessage = createMulticastMessage(receivedMessage, senderIpAddress);
+    public void handleMessage(Message messageFromMulticastMessageReceiverService) {
+        MulticastMessage multicastMessage = createMulticastMessage(messageFromMulticastMessageReceiverService);
         multicastMessageReceivedListener.onMulticastMessageReceived(multicastMessage);
     }
 
-    private String getSenderIpAddress(Message message) {
-        return message.getData().getString(SENDER_IP_ADDRESS);
-    }
-
-    private String getReceivedMessage(Message message) {
-        return message.getData().getString(RECEIVED_MESSAGE);
-    }
-
-    private MulticastMessage createMulticastMessage(String receivedMessage, String senderIpAddress) {
-        MulticastMessage multicastMessage = new MulticastMessage(receivedMessage, senderIpAddress);
+    private MulticastMessage createMulticastMessage(Message messageFromMulticastMessageReceiverService) {
+        String receivedText = getReceivedText(messageFromMulticastMessageReceiverService);
+        String senderIpAddress = getSenderIpAddress(messageFromMulticastMessageReceiverService);
+        MulticastMessage multicastMessage = new MulticastMessage(receivedText, senderIpAddress);
         if (senderIpAddress.equals(NetworkUtil.getMyWifiP2pIpAddress())) {
             multicastMessage.setSentByMe(true);
         }
         return multicastMessage;
+    }
+
+    private String getSenderIpAddress(Message messageFromReceiverService) {
+        return messageFromReceiverService.getData().getString(SENDER_IP_ADDRESS);
+    }
+
+    private String getReceivedText(Message messageFromReceiverService) {
+        return messageFromReceiverService.getData().getString(RECEIVED_TEXT);
     }
 }

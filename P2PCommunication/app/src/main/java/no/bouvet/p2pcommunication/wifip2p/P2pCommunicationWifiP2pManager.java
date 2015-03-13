@@ -5,6 +5,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 
@@ -27,7 +28,7 @@ public class P2pCommunicationWifiP2pManager {
     public P2pCommunicationWifiP2pManager(Context context) {
         this.context = context;
         this.wifiP2pManager = getWifiP2pManager();
-        this.wifiP2pChannel = createWifiP2pChannel();
+        this.wifiP2pChannel = initializeWifiP2pChannel();
     }
 
     public void startPeerDiscovery(DiscoveryStateListener discoveryStateListener) {
@@ -38,7 +39,7 @@ public class P2pCommunicationWifiP2pManager {
         wifiP2pManager.stopPeerDiscovery(wifiP2pChannel, new WifiP2pStopPeerDiscoveryActionListener(context, discoveryStateListener));
     }
 
-    public void requestPeers(WifiP2pManager.PeerListListener peerListListener) {
+    public void requestPeers(PeerListListener peerListListener) {
         wifiP2pManager.requestPeers(wifiP2pChannel, peerListListener);
     }
 
@@ -79,7 +80,7 @@ public class P2pCommunicationWifiP2pManager {
         return (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
     }
 
-    private Channel createWifiP2pChannel() {
+    private Channel initializeWifiP2pChannel() {
         return wifiP2pManager.initialize(context, context.getMainLooper(), null);
     }
 
