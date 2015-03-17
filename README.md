@@ -30,5 +30,8 @@ If you encounter problems, see "troubleshooting" section further down.
 - Minimum SDK version: 16
 - Target SDK version: 21
 
+### Libraries used
+- [ButterKnife](http://jakewharton.github.io/butterknife/)
+
 
 
