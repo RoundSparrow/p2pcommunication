@@ -17,7 +17,7 @@ If you encounter problems, see "troubleshooting" section further down.
 
 ### Things to note
 - All devices you want to connect to each other have to search for each other simultaneously. This is because each device will not advertise itself to other devices until the discovery process is started.
-- If you disconnect from a WiFi Direct network, you have to run the discovery process again ** before ** trying to reconnect. If you don't, you will get a "Busy"-error, and you may have to turn WiFi on your phone off and on again.
+- If you disconnect from a WiFi Direct network, you have to run the discovery process again **before** trying to reconnect. If you don't, you will get a "Busy"-error, and you may have to turn WiFi on your phone off and on again.
 
 ### Troubleshooting
 - [Android Studio cannot find git.exe (Create process error=2)](https://github.com/bouvet-bergen/p2pcommunication/wiki/Set-git-executable-path)
