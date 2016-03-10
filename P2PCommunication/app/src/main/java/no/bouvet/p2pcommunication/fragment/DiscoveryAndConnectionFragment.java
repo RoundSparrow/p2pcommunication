@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.DiscoveryListAdapter;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
@@ -36,10 +36,10 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     private WifiP2pListener wifiP2pListener;
     private MulticastListener multicastListener;
 
-    @InjectView(R.id.search_layout) RelativeLayout searchLayout;
-    @InjectView(R.id.no_devices_available_layout) RelativeLayout noDevicesAvailableLayout;
-    @InjectView(R.id.left_bottom_button) DiscoveryButton leftBottomButton;
-    @InjectView(R.id.right_bottom_button) ConnectionButton rightBottomButton;
+    @Bind(R.id.search_layout) RelativeLayout searchLayout;
+    @Bind(R.id.no_devices_available_layout) RelativeLayout noDevicesAvailableLayout;
+    @Bind(R.id.left_bottom_button) DiscoveryButton leftBottomButton;
+    @Bind(R.id.right_bottom_button) ConnectionButton rightBottomButton;
 
     public static Fragment newInstance() {
         DiscoveryAndConnectionFragment discoveryAndConnectionFragment = new DiscoveryAndConnectionFragment();
@@ -50,7 +50,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View discoveryAndConnectionFragmentView = layoutInflater.inflate(R.layout.discovery_and_connection_fragment, container, false);
-        ButterKnife.inject(this, discoveryAndConnectionFragmentView);
+        ButterKnife.bind(this, discoveryAndConnectionFragmentView);
         viewsInjected = true;
         return discoveryAndConnectionFragmentView;
     }
@@ -58,7 +58,7 @@ public class DiscoveryAndConnectionFragment extends ListFragment implements Disc
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
     @Override

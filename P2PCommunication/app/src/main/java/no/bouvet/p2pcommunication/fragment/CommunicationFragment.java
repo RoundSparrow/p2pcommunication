@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import no.bouvet.p2pcommunication.R;
 import no.bouvet.p2pcommunication.adapter.ChatListAdapter;
@@ -32,7 +32,7 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
     private Intent multicastReceiverServiceIntent;
     private ChatListAdapter chatListAdapter;
 
-    @InjectView(R.id.user_input_edit_text) EditText userInputEditText;
+    @Bind(R.id.user_input_edit_text) EditText userInputEditText;
 
     public static Fragment newInstance() {
         CommunicationFragment communicationFragment = new CommunicationFragment();
@@ -43,7 +43,7 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View communicationFragmentView = inflater.inflate(R.layout.communication_fragment, null);
-        ButterKnife.inject(this, communicationFragmentView);
+        ButterKnife.bind(this, communicationFragmentView);
         viewsInjected = true;
         return communicationFragmentView;
     }
@@ -51,7 +51,7 @@ public class CommunicationFragment extends ListFragment implements MulticastMess
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
     @Override

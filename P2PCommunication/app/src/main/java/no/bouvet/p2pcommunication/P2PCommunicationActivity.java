@@ -20,8 +20,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import no.bouvet.p2pcommunication.adapter.P2pCommunicationFragmentPagerAdapter;
 import no.bouvet.p2pcommunication.broadcastreceiver.WifiP2pBroadcastReceiver;
 import no.bouvet.p2pcommunication.fragment.CommunicationFragment;
@@ -41,18 +41,18 @@ public class P2PCommunicationActivity extends FragmentActivity implements WifiP2
     private P2pCommunicationFragmentPagerAdapter p2pCommunicationFragmentPagerAdapter;
     private boolean wifiP2pEnabled;
 
-    @InjectView(R.id.view_pager) ViewPager viewPager;
-    @InjectView(R.id.my_device_name_text_view) TextView myDeviceNameTextView;
-    @InjectView(R.id.my_device_status_text_view) TextView myDeviceStatusTextView;
-    @InjectView(R.id.am_i_host_question_text_view) TextView amIHostQuestionTextView;
-    @InjectView(R.id.host_ip_text_view) TextView hostIpTextView;
+    @Bind(R.id.view_pager) ViewPager viewPager;
+    @Bind(R.id.my_device_name_text_view) TextView myDeviceNameTextView;
+    @Bind(R.id.my_device_status_text_view) TextView myDeviceStatusTextView;
+    @Bind(R.id.am_i_host_question_text_view) TextView amIHostQuestionTextView;
+    @Bind(R.id.host_ip_text_view) TextView hostIpTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         createAndAcquireMulticastLock();
         p2pCommunicationWifiP2pManager = new P2pCommunicationWifiP2pManager(getApplicationContext());
         wifiP2pBroadcastReceiver = new WifiP2pBroadcastReceiver(getApplicationContext(), this);
